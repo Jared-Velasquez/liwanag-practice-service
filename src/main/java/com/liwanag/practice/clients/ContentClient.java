@@ -5,6 +5,7 @@ import com.liwanag.practice.models.content.Episode;
 import com.liwanag.practice.models.content.Unit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
@@ -22,6 +23,8 @@ public class ContentClient {
     private final DynamoDbTable<Activity> activityTable;
 
     // Note: when using DynamoDB key builder, both the partition and sort value must be passed
+    // Use Caffeine caching for canonical content (reasoning is in CacheConfig)
+    @Cacheable(cacheNames = "content", key = "#unitId", unless = "#result == null || #result.isEmpty()")
     public Optional<Unit> getUnit(String unitId) {
         return Optional.ofNullable(
                 unitTable.getItem(
@@ -30,6 +33,7 @@ public class ContentClient {
         );
     }
 
+    @Cacheable(cacheNames = "content", key = "#unitId#episodeId", unless = "#result == null || #result.isEmpty()")
     public Optional<Episode> getEpisode(String unitId, String episodeId) {
         return Optional.ofNullable(
                 episodeTable.getItem(
@@ -38,6 +42,7 @@ public class ContentClient {
         );
     }
 
+    @Cacheable(cacheNames = "content", key = "#unitId#episodeId#activityId", unless = "#result == null || #result.isEmpty()")
     public Optional<Activity> getActivity(String unitId, String episodeId, String activityId) {
         return Optional.ofNullable(
                 activityTable.getItem(

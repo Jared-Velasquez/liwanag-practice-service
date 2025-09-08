@@ -11,6 +11,14 @@ import org.springframework.context.annotation.Configuration;
 import java.time.Duration;
 import java.util.List;
 
+// Why have an in-memory colocated cache like Caffeine instead of using a distributed cache like Redis?
+// Since Liwanag canonical content is (by definition) static data, it also doesn't need complex
+// data structures (e.g. Redis sorted sets for leaderboards or distributed locks), in-memory caching
+// is well-suited.
+
+// Note: does a practice service have high scalability/availability requirements in terms of canonical content?
+// If so we might want to switch to Redis
+
 @Configuration
 @EnableCaching
 public class CacheConfig {
@@ -22,14 +30,14 @@ public class CacheConfig {
                         .expireAfterWrite(Duration.ofMinutes(60))
                         .recordStats()
                         .build());
-        var contentLive = new CaffeineCache("contentLive",
+        var content = new CaffeineCache("content",
                 Caffeine.newBuilder()
                         .maximumSize(1000)
                         .expireAfterWrite(Duration.ofMinutes(60))
                         .recordStats()
                         .build());
         var manager = new SimpleCacheManager();
-        manager.setCaches(List.of(manifests, contentLive));
+        manager.setCaches(List.of(manifests, content));
         return manager;
     }
 }
