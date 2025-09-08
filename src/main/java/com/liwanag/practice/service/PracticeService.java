@@ -18,6 +18,12 @@ public class PracticeService {
     @Transactional
     @NonNull
     public ClaimNext claimNext(UUID userId, String unitId, String episodeId, String activityId) {
-        return new ClaimNext(Source.CANONICAL, UUID.randomUUID(), new Session(), Instant.now(), new MultipleChoiceQuestion());
+        return new ClaimNext(
+                Source.CANONICAL,
+                UUID.randomUUID(),
+                new Session(),
+                Instant.now(),
+                new MultipleChoiceQuestion()
+        );
     }
 }
