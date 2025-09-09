@@ -16,12 +16,12 @@ public class PracticeController {
 
     @PostMapping("/next")
     public ResponseEntity<?> next(@PathVariable String unitId, @PathVariable String episodeId, @PathVariable String activityId, @RequestHeader(name = "x-cognito-sub") UUID userId) {
-        ClaimNext next = practiceService.claimNext(userId, unitId, episodeId, activityId);
-
-        return switch (next.getSession().getStatus()) {
-            case OK -> ResponseEntity.ok(next);
-            case IN_PROGRESS -> ResponseEntity.status(409).body(next);
-            case COMPLETED -> ResponseEntity.noContent().build();
-        };
+//        ClaimNext next = practiceService.claimNext(userId, unitId, episodeId, activityId);
+//
+//        return switch (next.getSession().getStatus()) {
+//            case OK -> ResponseEntity.ok(next);
+//            case IN_PROGRESS -> ResponseEntity.status(409).body(next);
+//            case COMPLETED -> ResponseEntity.noContent().build();
+//        };
     }
 }

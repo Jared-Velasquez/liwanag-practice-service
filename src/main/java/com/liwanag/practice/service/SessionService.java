@@ -5,6 +5,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class QuestionPoolService {
-    // What functions should the QuestionPoolService provide?
+public class SessionService {
 }

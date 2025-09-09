@@ -1,4 +1,4 @@
-package com.liwanag.practice.models.content;
+package com.liwanag.practice.models.session;
 
 import com.liwanag.practice.annotations.TableName;
 import lombok.Getter;
@@ -9,22 +9,32 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
 
 import java.util.List;
 
-// Sample: https://aws.amazon.com/blogs/database/use-spring-cloud-to-capture-amazon-dynamodb-changes-through-amazon-kinesis-data-streams/
-
-@DynamoDbBean // tells Spring Cloud that this entity needs to be mapped to a DynamoDB table; table name must be overridden via DI
-@TableName(name = "ContentTable")
+@DynamoDbBean
+@TableName(name = "SessionTable")
 @Getter
 @Setter
-public class Unit {
+public class Session {
     private String pk;
     private String sk;
-    private String entityType; // always UNIT_LIVE
-    private String unitId;
-    private String title;
-    private String description;
-    private List<String> episodeIds;
-    private List<String> episodeFqIds;
+    private String entityType;
+    private String activityFqId;
+    private Integer activityVersion;
+    private String status; // IDLE || IN_PROGRESS || FINISHED
+    private String orderS3Key;
+
+    private String currentQuestion;
+    private String turnToken;
+    private Long leaseExpiresAt;
+
+    private Integer attempted;
+    private Integer correct;
+
+    private Long createdAt;
     private Long updatedAt;
+    private Long firstStartedAt;
+    private Long lastAnsweredAt;
+    private Long completedAt;
+    private Long ttl;
 
     @DynamoDbPartitionKey
     public String getPk() {

@@ -1,7 +1,5 @@
 package com.liwanag.practice.utils;
 
-import org.springframework.lang.Contract;
-
 public final class ContentKeys {
     private ContentKeys() {}
 

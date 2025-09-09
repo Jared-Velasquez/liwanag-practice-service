@@ -1,6 +1,7 @@
 package com.liwanag.practice.dto.next;
 
 import com.liwanag.practice.models.questions.Question;
+import com.liwanag.practice.models.session.Session;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,23 +24,5 @@ public class ClaimNext {
     public enum Source {
         CANONICAL,
         PERSONALIZED
-    }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Session {
-        private String activityFqId;
-        private Integer position;
-        private Integer total;
-        private Boolean isLast;
-        private Status status;
-
-        public enum Status {
-            OK,
-            IN_PROGRESS,
-            COMPLETED
-        }
     }
 }
