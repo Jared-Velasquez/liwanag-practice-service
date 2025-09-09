@@ -1,0 +1,10 @@
+package com.liwanag.practice.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class QuestionPoolService {
+    // What functions should the QuestionPoolService provide?
+}

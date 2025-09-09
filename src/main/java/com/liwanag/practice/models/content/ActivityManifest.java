@@ -1,4 +1,4 @@
-package com.liwanag.practice.models;
+package com.liwanag.practice.models.content;
 
 import com.liwanag.practice.models.questions.Question;
 
