@@ -1,6 +1,6 @@
 package com.liwanag.practice.clients;
 
-import com.liwanag.practice.models.session.Session;
+import com.liwanag.practice.domain.model.session.Session;
 import static com.liwanag.practice.utils.SessionKeys.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

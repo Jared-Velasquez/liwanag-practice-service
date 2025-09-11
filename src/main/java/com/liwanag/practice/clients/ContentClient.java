@@ -1,10 +1,10 @@
 package com.liwanag.practice.clients;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.liwanag.practice.models.content.Activity;
-import com.liwanag.practice.models.content.ActivityManifest;
-import com.liwanag.practice.models.content.Episode;
-import com.liwanag.practice.models.content.Unit;
+import com.liwanag.practice.domain.model.content.Activity;
+import com.liwanag.practice.domain.model.content.ActivityManifest;
+import com.liwanag.practice.domain.model.content.Episode;
+import com.liwanag.practice.domain.model.content.Unit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;

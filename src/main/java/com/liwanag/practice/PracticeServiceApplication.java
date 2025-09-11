@@ -16,6 +16,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // logic is independent of technological choices. Additionally, as long as adapters adhere to the defined
 // ports/interfaces, adapters can be swapped out easily for business logic to invoke.
 
+// Note: only adapters should use Spring annotations
+
 // Sources:
 // https://dev.to/jhonifaber/hexagonal-architecture-or-port-adapters-23ed
 // https://www.baeldung.com/hexagonal-architecture-ddd-spring
