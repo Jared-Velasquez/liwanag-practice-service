@@ -1,5 +1,7 @@
 package com.liwanag.practice.utils;
 
+import com.liwanag.practice.domain.model.content.FqId;
+
 import java.util.UUID;
 
 public final class SessionKeys {
@@ -9,7 +11,9 @@ public final class SessionKeys {
         return String.format("USER#%s", userId);
     }
 
-    public static String sessionSk(String unitId, String episodeId, String activityId) {
-        return String.format("SESSION#%s#%s#%s", unitId, episodeId, activityId);
+    public static String sessionSk(FqId fqid) {
+        if (!fqid.isActivityFqId())
+            throw new IllegalArgumentException("FqId is not an activity FqId");
+        return String.format("SESSION#%s#%s#%s", fqid.getUnitId(), fqid.getEpisodeId(), fqid.getActivityId());
     }
 }

@@ -39,15 +39,7 @@ public class PracticeController {
             @RequestHeader(name = "x-cognito-sub") UUID userId,
             @RequestParam UUID sessionId) {
         // TODO: handle errors such as session not found, double-next, answer not provided
-        // TODO: handle when there are no more questions
+        // TODO: handle when there are no more questions (end session)
         return ResponseEntity.ok(nextService.claimNext(userId, sessionId));
-    }
-
-    @PostMapping("/session/{sessionId}/end")
-    public ResponseEntity<?> endSession(
-            @RequestHeader(name = "x-cognito-sub") UUID userId,
-            @RequestParam UUID sessionId) {
-        sessionService.endSession(userId, sessionId);
-        return ResponseEntity.noContent().build();
     }
 }
