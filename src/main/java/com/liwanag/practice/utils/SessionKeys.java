@@ -11,9 +11,23 @@ public final class SessionKeys {
         return String.format("USER#%s", userId);
     }
 
-    public static String sessionSk(FqId fqid) {
-        if (!fqid.isActivityFqId())
-            throw new IllegalArgumentException("FqId is not an activity FqId");
-        return String.format("SESSION#%s#%s#%s", fqid.getUnitId(), fqid.getEpisodeId(), fqid.getActivityId());
+    public static String sessionSk(UUID sessionId) {
+        return String.format("SESSION#%s", sessionId);
+    }
+
+    public static UUID extractUserId(String pk) {
+        if (!pk.startsWith("USER#")) {
+            throw new IllegalArgumentException("Invalid PK format");
+        }
+
+        return UUID.fromString(pk.split("#")[1]);
+    }
+
+    public static UUID extractSessionId(String sessionId) {
+        if (!sessionId.startsWith("SESSION#")) {
+            throw new IllegalArgumentException("Invalid SK format");
+        }
+
+        return UUID.fromString(sessionId.split("#")[1]);
     }
 }

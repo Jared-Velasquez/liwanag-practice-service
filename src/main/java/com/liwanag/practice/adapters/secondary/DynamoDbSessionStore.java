@@ -28,7 +28,7 @@ public class DynamoDbSessionStore implements SessionStore {
     }
 
     @Override
-    public void createSession(UUID userId, FqId fqid) {
+    public void createSession(UUID userId, FqId fqid, Session session) {
         if (!fqid.isActivityFqId())
             throw new IllegalArgumentException("FqId is not an activity FqId");
         String pk = sessionPk(userId);
