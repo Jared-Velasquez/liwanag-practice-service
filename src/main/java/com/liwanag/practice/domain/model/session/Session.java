@@ -1,6 +1,7 @@
 package com.liwanag.practice.domain.model.session;
 
 import com.liwanag.practice.annotations.TableName;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
@@ -8,22 +9,23 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbParti
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
 import java.util.List;
+import java.util.UUID;
 
 @DynamoDbBean
 @TableName(name = "SessionTable")
 @Getter
 @Setter
+@Builder
 public class Session {
     private String pk;
     private String sk;
-    private String entityType;
     private String activityFqId;
     private Integer activityVersion;
-    private String status; // IDLE || IN_PROGRESS || FINISHED
+    private Status status;
     private String orderS3Key;
 
     private String currentQuestion;
-    private String turnToken;
+    private UUID turnToken;
     private Long leaseExpiresAt;
 
     private Integer attempted;
@@ -44,5 +46,11 @@ public class Session {
     @DynamoDbSortKey
     public String getSk() {
         return sk;
+    }
+
+    public enum Status {
+        IDLE,
+        IN_PROGRESS,
+        FINISHED
     }
 }

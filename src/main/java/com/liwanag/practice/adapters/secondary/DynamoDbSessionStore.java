@@ -1,6 +1,5 @@
 package com.liwanag.practice.adapters.secondary;
 
-import com.liwanag.practice.domain.model.content.Activity;
 import com.liwanag.practice.domain.model.content.FqId;
 import com.liwanag.practice.domain.model.session.Session;
 import com.liwanag.practice.ports.secondary.SessionStore;
@@ -26,5 +25,16 @@ public class DynamoDbSessionStore implements SessionStore {
         String sk = sessionSk(fqid);
         Session session = sessionTable.getItem(r -> r.key(k -> k.partitionValue(pk).sortValue(sk)));
         return session != null;
+    }
+
+    @Override
+    public void createSession(UUID userId, FqId fqid) {
+        if (!fqid.isActivityFqId())
+            throw new IllegalArgumentException("FqId is not an activity FqId");
+        String pk = sessionPk(userId);
+        String sk = sessionSk(fqid);
+        Session session = Session.builder().pk(pk).sk(sk).activityFqId(fqid.toString()).status(Session.Status.IDLE).build();
+
+        sessionTable.putItem(session);
     }
 }

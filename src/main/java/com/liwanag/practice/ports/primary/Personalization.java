@@ -6,7 +6,6 @@ import com.liwanag.practice.domain.model.questions.Question;
 import java.util.List;
 import java.util.UUID;
 
-public interface QuestionPool {
-    void generatePool(UUID sessionId);
-    List<Question> getPool(UUID sessionId);
+public interface Personalization {
+    List<Question> generateQuestions(UUID userId, FqId fqid);
 }
