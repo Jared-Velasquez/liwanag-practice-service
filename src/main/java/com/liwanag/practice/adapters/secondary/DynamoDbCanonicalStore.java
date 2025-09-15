@@ -1,6 +1,9 @@
 package com.liwanag.practice.adapters.secondary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.liwanag.practice.adapters.secondary.persistence.entity.ActivityEntity;
+import com.liwanag.practice.adapters.secondary.persistence.entity.EpisodeEntity;
+import com.liwanag.practice.adapters.secondary.persistence.entity.UnitEntity;
 import com.liwanag.practice.domain.model.content.*;
 import com.liwanag.practice.domain.model.questions.Question;
 import com.liwanag.practice.ports.secondary.CanonicalStore;
@@ -25,15 +28,15 @@ import static com.liwanag.practice.utils.ContentKeys.liveSk;
 @Slf4j
 public class DynamoDbCanonicalStore implements CanonicalStore {
     // Note: all canonical content is stored in one "ContentTable" for faster lookups
-    private final DynamoDbTable<Unit> unitTable;
-    private final DynamoDbTable<Episode> episodeTable;
-    private final DynamoDbTable<Activity> activityTable;
+    private final DynamoDbTable<UnitEntity> unitTable;
+    private final DynamoDbTable<EpisodeEntity> episodeTable;
+    private final DynamoDbTable<ActivityEntity> activityTable;
     private final S3Client s3Client;
 
     @Override
     public List<Question> loadQuestions(FqId fqid) throws NoSuchElementException {
         // Load the DynamoDB activity entity by its fully qualified activity id
-        Activity activity = Optional.ofNullable(
+        ActivityEntity activity = Optional.ofNullable(
                 activityTable.getItem(
                         Key.builder().partitionValue(activityPk(fqid)).sortValue(liveSk()).build()
                 )

@@ -6,6 +6,9 @@ import lombok.Setter;
 
 import java.util.regex.Pattern;
 
+/**
+ * Represents a fully-qualified ID for units, episodes, and activities.
+ */
 @AllArgsConstructor
 @Getter
 @Setter

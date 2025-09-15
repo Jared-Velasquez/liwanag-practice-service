@@ -5,7 +5,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
- * Represents an opaque pointer to a question pool / manifest
+ * Represents an opaque pointer to a session manifest / question pool
  */
 public final class ManifestHandle implements Serializable {
     private static final Long serialVersionUID = 1L;
