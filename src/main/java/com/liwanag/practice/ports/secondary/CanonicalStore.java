@@ -1,13 +1,12 @@
 package com.liwanag.practice.ports.secondary;
 
-import com.liwanag.practice.domain.dto.content.UnitOverviewDTO;
 import com.liwanag.practice.domain.model.content.FqId;
 import com.liwanag.practice.domain.model.questions.Question;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public interface QuestionStore {
+public interface CanonicalStore {
     /**
      * Load questions by fully qualified activity id
      * @param fqid

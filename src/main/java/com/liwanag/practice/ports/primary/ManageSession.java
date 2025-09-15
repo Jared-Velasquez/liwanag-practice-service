@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public interface ManageSession {
     Session startSession(UUID userId, FqId fqid);
-    void endSession(UUID userId, UUID sessionId);
+//    void endSession(UUID userId, UUID sessionId);
 }

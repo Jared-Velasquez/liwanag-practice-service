@@ -3,7 +3,7 @@ package com.liwanag.practice.adapters.secondary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liwanag.practice.domain.model.content.*;
 import com.liwanag.practice.domain.model.questions.Question;
-import com.liwanag.practice.ports.secondary.QuestionStore;
+import com.liwanag.practice.ports.secondary.CanonicalStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ import static com.liwanag.practice.utils.ContentKeys.liveSk;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class DynamoDbQuestionStore implements QuestionStore {
+public class DynamoDbCanonicalStore implements CanonicalStore {
     // Note: all canonical content is stored in one "ContentTable" for faster lookups
     private final DynamoDbTable<Unit> unitTable;
     private final DynamoDbTable<Episode> episodeTable;

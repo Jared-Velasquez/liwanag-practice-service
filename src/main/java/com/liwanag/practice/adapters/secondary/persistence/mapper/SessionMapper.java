@@ -22,7 +22,7 @@ public final class SessionMapper {
                 .status(model.getStatus().toString())
                 .currentIndex(model.getCurrentIndex())
                 .turnToken(model.getTurnToken().toString())
-                .leaseExpiresAt(model.getLeaseExpiresAt())
+                .leaseExpiresAt(model.getLeaseExpiresAt().toEpochMilli())
                 .manifestS3Key(manifestMapper.toS3URL(model.getManifestHandle()))
                 .attempted(model.getAttempted())
                 .correct(model.getCorrect())
@@ -43,7 +43,7 @@ public final class SessionMapper {
                 .status(Session.Status.valueOf(entity.getStatus())) // TODO: perform exception handling
                 .currentIndex(entity.getCurrentIndex())
                 .turnToken(UUID.fromString(entity.getTurnToken()))
-                .leaseExpiresAt(entity.getLeaseExpiresAt())
+                .leaseExpiresAt(Instant.ofEpochMilli(entity.getLeaseExpiresAt()))
                 .manifestHandle(manifestMapper.fromS3KeyOrURL(entity.getManifestS3Key()))
                 .attempted(entity.getAttempted())
                 .correct(entity.getCorrect())
