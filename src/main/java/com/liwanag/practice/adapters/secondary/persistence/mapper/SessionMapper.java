@@ -7,6 +7,7 @@ import com.liwanag.practice.utils.SessionKeys;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Component
 public final class SessionMapper {
@@ -19,6 +20,9 @@ public final class SessionMapper {
                 .activityFqId(model.getActivityFqId().toString())
                 .activityVersion(model.getActivityVersion())
                 .status(model.getStatus().toString())
+                .currentIndex(model.getCurrentIndex())
+                .turnToken(model.getTurnToken().toString())
+                .leaseExpiresAt(model.getLeaseExpiresAt())
                 .manifestS3Key(manifestMapper.toS3URL(model.getManifestHandle()))
                 .attempted(model.getAttempted())
                 .correct(model.getCorrect())
@@ -37,6 +41,9 @@ public final class SessionMapper {
                 .activityFqId(new FqId(entity.getActivityFqId()))
                 .activityVersion(entity.getActivityVersion())
                 .status(Session.Status.valueOf(entity.getStatus())) // TODO: perform exception handling
+                .currentIndex(entity.getCurrentIndex())
+                .turnToken(UUID.fromString(entity.getTurnToken()))
+                .leaseExpiresAt(entity.getLeaseExpiresAt())
                 .manifestHandle(manifestMapper.fromS3KeyOrURL(entity.getManifestS3Key()))
                 .attempted(entity.getAttempted())
                 .correct(entity.getCorrect())

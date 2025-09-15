@@ -19,7 +19,7 @@ public final class Session {
     private final Integer activityVersion;
     private Status status;
 
-    private String currentQuestion;
+    private Integer currentIndex;
     private UUID turnToken;
     private Long leaseExpiresAt;
     private ManifestHandle manifestHandle;
@@ -30,6 +30,18 @@ public final class Session {
     private Instant createdAt;
     private Instant updatedAt;
     private Instant completedAt;
+
+    public Boolean hasNext(int total) {
+        return this.currentIndex < total;
+    }
+
+    public Integer nextIndex() {
+        return this.currentIndex;
+    }
+
+    public void advance() {
+        this.currentIndex++;
+    }
 
     public enum Status {
         IDLE,

@@ -19,10 +19,11 @@ public class SessionEntity {
     private String activityFqId;
     private Integer activityVersion;
     private String status;
-    private String manifestS3Key;
 
-    private String currentQuestion;
+    private Integer currentIndex;
     private String turnToken;
+    private Long leaseExpiresAt;
+    private String manifestS3Key;
 
     private Integer attempted;
     private Integer correct;
