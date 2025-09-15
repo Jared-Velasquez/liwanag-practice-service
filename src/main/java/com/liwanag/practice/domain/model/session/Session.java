@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.net.URL;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -22,7 +21,7 @@ public final class Session {
     private Integer currentIndex;
     private UUID turnToken;
     private Instant leaseExpiresAt;
-    private ManifestHandle manifestHandle;
+    private SessionManifestHandle manifestHandle;
 
     private Integer attempted;
     private Integer correct;
@@ -51,7 +50,7 @@ public final class Session {
         FINISHED
     }
 
-    public static Session start(UUID sessionId, UUID userId, FqId activityFqId, ManifestHandle handle) {
+    public static Session start(UUID sessionId, UUID userId, FqId activityFqId, SessionManifestHandle handle) {
         return Session.builder()
                 .sessionId(sessionId)
                 .userId(userId)

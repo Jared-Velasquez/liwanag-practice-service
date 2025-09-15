@@ -33,32 +33,34 @@ public class DynamoDbCanonicalStore implements CanonicalStore {
     private final DynamoDbTable<ActivityEntity> activityTable;
     private final S3Client s3Client;
 
-    @Override
-    public List<Question> loadQuestions(FqId fqid) throws NoSuchElementException {
-        // Load the DynamoDB activity entity by its fully qualified activity id
-        ActivityEntity activity = Optional.ofNullable(
-                activityTable.getItem(
-                        Key.builder().partitionValue(activityPk(fqid)).sortValue(liveSk()).build()
-                )
-        ).orElseThrow();
+//    @Override
+//    public List<Question> loadQuestions(FqId fqid) throws NoSuchElementException {
+//        // Load the DynamoDB activity entity by its fully qualified activity id
+//        ActivityEntity activity = Optional.ofNullable(
+//                activityTable.getItem(
+//                        Key.builder().partitionValue(activityPk(fqid)).sortValue(liveSk()).build()
+//                )
+//        ).orElseThrow();
+//
+//        // Then take the manifestS3Key from the Activity entity and load the canonical questions JSON from S3
+//        URI manifestURI = URI.create(activity.getManifestS3Key());
+//
+//        ActivityManifest manifest = null;
+//        try {
+//            var is = s3Client.getObject(GetObjectRequest.builder()
+//                    .bucket(manifestURI.getHost())
+//                    .key(manifestURI.getPath().substring(1))
+//                    .build()
+//            );
+//
+//             manifest = new ObjectMapper().readValue(is, ActivityManifest.class);
+//        } catch (Exception e) {
+//            log.error("Exception occurred when loading manifest", e);
+//            throw new NoSuchElementException("Could not load manifest");
+//        }
+//
+//        return manifest.questions();
+//    }
 
-        // Then take the manifestS3Key from the Activity entity and load the canonical questions JSON from S3
-        URI manifestURI = URI.create(activity.getManifestS3Key());
 
-        ActivityManifest manifest = null;
-        try {
-            var is = s3Client.getObject(GetObjectRequest.builder()
-                    .bucket(manifestURI.getHost())
-                    .key(manifestURI.getPath().substring(1))
-                    .build()
-            );
-
-             manifest = new ObjectMapper().readValue(is, ActivityManifest.class);
-        } catch (Exception e) {
-            log.error("Exception occurred when loading manifest", e);
-            throw new NoSuchElementException("Could not load manifest");
-        }
-
-        return manifest.questions();
-    }
 }

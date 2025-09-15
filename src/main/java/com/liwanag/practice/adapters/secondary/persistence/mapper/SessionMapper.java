@@ -12,7 +12,7 @@ import java.util.UUID;
 @Component
 public final class SessionMapper {
     public SessionEntity toEntity(Session model) {
-        ManifestMapper manifestMapper = new ManifestMapper("test-bucket");
+        SessionManifestMapper sessionManifestMapper = new SessionManifestMapper("test-bucket");
 
         return SessionEntity.builder()
                 .pk(SessionKeys.sessionPk(model.getUserId()))
@@ -23,7 +23,7 @@ public final class SessionMapper {
                 .currentIndex(model.getCurrentIndex())
                 .turnToken(model.getTurnToken().toString())
                 .leaseExpiresAt(model.getLeaseExpiresAt().toEpochMilli())
-                .manifestS3Key(manifestMapper.toS3URL(model.getManifestHandle()))
+                .manifestS3Key(sessionManifestMapper.toS3URL(model.getManifestHandle()))
                 .attempted(model.getAttempted())
                 .correct(model.getCorrect())
                 .createdAt(model.getCreatedAt().toEpochMilli())
@@ -33,7 +33,7 @@ public final class SessionMapper {
     }
 
     public Session toModel(SessionEntity entity) {
-        ManifestMapper manifestMapper = new ManifestMapper("test-bucket");
+        SessionManifestMapper sessionManifestMapper = new SessionManifestMapper("test-bucket");
 
         return Session.builder()
                 .sessionId(SessionKeys.extractSessionId(entity.getSk()))
@@ -44,7 +44,7 @@ public final class SessionMapper {
                 .currentIndex(entity.getCurrentIndex())
                 .turnToken(UUID.fromString(entity.getTurnToken()))
                 .leaseExpiresAt(Instant.ofEpochMilli(entity.getLeaseExpiresAt()))
-                .manifestHandle(manifestMapper.fromS3KeyOrURL(entity.getManifestS3Key()))
+                .manifestHandle(sessionManifestMapper.fromS3KeyOrURL(entity.getManifestS3Key()))
                 .attempted(entity.getAttempted())
                 .correct(entity.getCorrect())
                 .createdAt(Instant.ofEpochMilli(entity.getCreatedAt()))

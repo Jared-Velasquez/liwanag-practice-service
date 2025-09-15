@@ -1,5 +1,6 @@
 package com.liwanag.practice.ports.secondary;
 
+import com.liwanag.practice.domain.model.content.Activity;
 import com.liwanag.practice.domain.model.content.FqId;
 import com.liwanag.practice.domain.model.questions.Question;
 
@@ -8,11 +9,11 @@ import java.util.NoSuchElementException;
 
 public interface CanonicalStore {
     /**
-     * Load questions by fully qualified activity id
-     * @param fqid
-     * @return List of Questions to be used in the session
+     * Load an activity by its fully qualified ID
+     * @param fqid Fully qualified activity ID
+     * @return Activity object
      */
-    List<Question> loadQuestions(FqId fqid) throws NoSuchElementException;
+    Activity loadActivity(FqId fqid) throws NoSuchElementException;
 
     /**
      * Load the full canonical Liwanag content (units, their episodes, and their activities)
