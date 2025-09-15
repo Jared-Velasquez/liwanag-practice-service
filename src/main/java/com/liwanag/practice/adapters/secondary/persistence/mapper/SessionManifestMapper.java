@@ -1,11 +1,12 @@
 package com.liwanag.practice.adapters.secondary.persistence.mapper;
 
 import com.liwanag.practice.domain.model.session.SessionManifestHandle;
+import org.springframework.beans.factory.annotation.Value;
 
 public final class SessionManifestMapper {
     private final String bucket;
 
-    public SessionManifestMapper(String bucket) {
+    public SessionManifestMapper(@Value("${manifest.session.bucket}") String bucket) {
         this.bucket = bucket;
     }
 

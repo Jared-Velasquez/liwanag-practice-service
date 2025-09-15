@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liwanag.practice.adapters.secondary.persistence.entity.ActivityEntity;
 import com.liwanag.practice.adapters.secondary.persistence.entity.EpisodeEntity;
 import com.liwanag.practice.adapters.secondary.persistence.entity.UnitEntity;
+import com.liwanag.practice.adapters.secondary.persistence.mapper.ActivityMapper;
 import com.liwanag.practice.domain.model.content.*;
 import com.liwanag.practice.domain.model.questions.Question;
 import com.liwanag.practice.ports.secondary.CanonicalStore;
@@ -31,7 +32,7 @@ public class DynamoDbCanonicalStore implements CanonicalStore {
     private final DynamoDbTable<UnitEntity> unitTable;
     private final DynamoDbTable<EpisodeEntity> episodeTable;
     private final DynamoDbTable<ActivityEntity> activityTable;
-    private final S3Client s3Client;
+    private final ActivityMapper activityMapper;
 
 //    @Override
 //    public List<Question> loadQuestions(FqId fqid) throws NoSuchElementException {
@@ -62,5 +63,17 @@ public class DynamoDbCanonicalStore implements CanonicalStore {
 //        return manifest.questions();
 //    }
 
+    @Override
+    public Activity loadActivity(FqId fqid) throws NoSuchElementException {
+        ActivityEntity entity = Optional.ofNullable(
+                activityTable.getItem(
+                        Key.builder().partitionValue(activityPk(fqid)).sortValue(liveSk()).build()
+                )
+        ).orElseThrow(() -> {
+            log.error("Activity not found for fqid: {}", fqid);
+            return new NoSuchElementException("Activity not found");
+        });
 
+        return activityMapper.toModel(entity);
+    }
 }

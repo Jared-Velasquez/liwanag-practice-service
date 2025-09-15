@@ -4,15 +4,18 @@ import com.liwanag.practice.adapters.secondary.persistence.entity.SessionEntity;
 import com.liwanag.practice.domain.model.content.FqId;
 import com.liwanag.practice.domain.model.session.Session;
 import com.liwanag.practice.utils.SessionKeys;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Component
+@RequiredArgsConstructor
 public final class SessionMapper {
+    private final SessionManifestMapper manifestMapper;
     public SessionEntity toEntity(Session model) {
-        SessionManifestMapper sessionManifestMapper = new SessionManifestMapper("test-bucket");
 
         return SessionEntity.builder()
                 .pk(SessionKeys.sessionPk(model.getUserId()))
@@ -23,7 +26,7 @@ public final class SessionMapper {
                 .currentIndex(model.getCurrentIndex())
                 .turnToken(model.getTurnToken().toString())
                 .leaseExpiresAt(model.getLeaseExpiresAt().toEpochMilli())
-                .manifestS3Key(sessionManifestMapper.toS3URL(model.getManifestHandle()))
+                .manifestS3Key(manifestMapper.toS3URL(model.getManifestHandle()))
                 .attempted(model.getAttempted())
                 .correct(model.getCorrect())
                 .createdAt(model.getCreatedAt().toEpochMilli())
@@ -44,7 +47,7 @@ public final class SessionMapper {
                 .currentIndex(entity.getCurrentIndex())
                 .turnToken(UUID.fromString(entity.getTurnToken()))
                 .leaseExpiresAt(Instant.ofEpochMilli(entity.getLeaseExpiresAt()))
-                .manifestHandle(sessionManifestMapper.fromS3KeyOrURL(entity.getManifestS3Key()))
+                .manifestHandle(manifestMapper.fromS3KeyOrURL(entity.getManifestS3Key()))
                 .attempted(entity.getAttempted())
                 .correct(entity.getCorrect())
                 .createdAt(Instant.ofEpochMilli(entity.getCreatedAt()))

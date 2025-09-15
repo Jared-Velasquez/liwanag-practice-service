@@ -3,11 +3,16 @@ package com.liwanag.practice.adapters.secondary.persistence.mapper;
 import com.liwanag.practice.domain.model.content.ActivityManifestHandle;
 import com.liwanag.practice.domain.model.content.FqId;
 import com.liwanag.practice.domain.model.session.SessionManifestHandle;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
+@Slf4j
 public final class ActivityManifestMapper {
     private final String bucket;
 
-    public ActivityManifestMapper(String bucket) {
+    public ActivityManifestMapper(@Value("${manifest.canonical.bucket}") String bucket) {
         this.bucket = bucket;
     }
 
