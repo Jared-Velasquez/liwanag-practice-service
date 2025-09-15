@@ -5,6 +5,7 @@ import com.liwanag.practice.domain.model.session.Session;
 import com.liwanag.practice.ports.primary.ManageSession;
 import com.liwanag.practice.ports.primary.Personalization;
 import com.liwanag.practice.ports.primary.QuestionPoolPolicy;
+import com.liwanag.practice.ports.secondary.CanonicalManifestStore;
 import com.liwanag.practice.ports.secondary.CanonicalStore;
 import com.liwanag.practice.ports.secondary.QuestionManifestStore;
 import com.liwanag.practice.ports.secondary.SessionStore;
@@ -18,6 +19,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class ManageSessionService implements ManageSession {
     private final CanonicalStore canonicalStore;
+    private final CanonicalManifestStore canonicalManifestStore;
     private final QuestionManifestStore questionManifestStore;
     private final QuestionPoolPolicy questionPoolPolicy;
     private final Personalization personalizationService;
@@ -26,7 +28,8 @@ public class ManageSessionService implements ManageSession {
     public Session startSession(UUID userId, FqId fqid) {
         // 1. load canonical questions, generate personalized questions, and create a question pool
 
-        var canonicalQuestions = canonicalStore.loadQuestions(fqid);
+        var activity = canonicalStore.loadActivity(fqid);
+        var canonicalQuestions = canonicalManifestStore.load(activity.getManifestHandle());
         var personalizedQuestions = personalizationService.generateQuestions(userId, fqid);
 
         var questionPool = Stream.concat(canonicalQuestions.stream(), personalizedQuestions.stream()).toList();

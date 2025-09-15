@@ -2,6 +2,7 @@ package com.liwanag.practice.config;
 
 import com.liwanag.practice.application.*;
 import com.liwanag.practice.ports.primary.*;
+import com.liwanag.practice.ports.secondary.CanonicalManifestStore;
 import com.liwanag.practice.ports.secondary.CanonicalStore;
 import com.liwanag.practice.ports.secondary.QuestionManifestStore;
 import com.liwanag.practice.ports.secondary.SessionStore;
@@ -18,6 +19,7 @@ public class PracticeConfig {
     @Bean
     public ManageSession manageSession(
             CanonicalStore canonicalStore,
+            CanonicalManifestStore canonicalManifestStore,
             QuestionManifestStore questionManifestStore,
             QuestionPoolPolicy questionPoolPolicy,
             Personalization personalization,
@@ -25,6 +27,7 @@ public class PracticeConfig {
     ) {
         return new ManageSessionService(
                 canonicalStore,
+                canonicalManifestStore,
                 questionManifestStore,
                 questionPoolPolicy,
                 personalization,
