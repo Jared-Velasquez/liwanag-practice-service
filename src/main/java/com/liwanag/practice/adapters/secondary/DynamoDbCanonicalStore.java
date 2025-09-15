@@ -53,7 +53,7 @@ public class DynamoDbCanonicalStore implements CanonicalStore {
              manifest = new ObjectMapper().readValue(is, ActivityManifest.class);
         } catch (Exception e) {
             log.error("Exception occurred when loading manifest", e);
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("Could not load manifest");
         }
 
         return manifest.questions();

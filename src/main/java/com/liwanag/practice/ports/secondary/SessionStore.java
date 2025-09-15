@@ -6,7 +6,7 @@ import com.liwanag.practice.domain.model.session.Session;
 import java.util.UUID;
 
 public interface SessionStore {
-    Boolean isSessionActive(UUID userId, FqId fqid);
+//    Boolean isSessionActive(UUID userId, FqId fqid);
     void save(Session session);
-    Session load(UUID sessionId);
+    Session load(UUID sessionId, UUID userId);
 }
