@@ -9,14 +9,17 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 
 @Component
-public class SessionMapper {
+public final class SessionMapper {
     public SessionEntity toEntity(Session model) {
+        ManifestMapper manifestMapper = new ManifestMapper("test-bucket");
+
         return SessionEntity.builder()
                 .pk(SessionKeys.sessionPk(model.getUserId()))
                 .sk(SessionKeys.sessionSk(model.getSessionId()))
                 .activityFqId(model.getActivityFqId().toString())
                 .activityVersion(model.getActivityVersion())
                 .status(model.getStatus().toString())
+                .manifestS3Key(manifestMapper.toS3URL(model.getManifestHandle()))
                 .attempted(model.getAttempted())
                 .correct(model.getCorrect())
                 .createdAt(model.getCreatedAt().toEpochMilli())
@@ -26,16 +29,20 @@ public class SessionMapper {
     }
 
     public Session toModel(SessionEntity entity) {
+        ManifestMapper manifestMapper = new ManifestMapper("test-bucket");
+
         return Session.builder()
                 .sessionId(SessionKeys.extractSessionId(entity.getSk()))
                 .userId(SessionKeys.extractUserId(entity.getPk()))
                 .activityFqId(new FqId(entity.getActivityFqId()))
                 .activityVersion(entity.getActivityVersion())
                 .status(Session.Status.valueOf(entity.getStatus())) // TODO: perform exception handling
+                .manifestHandle(manifestMapper.fromS3KeyOrURL(entity.getManifestS3Key()))
                 .attempted(entity.getAttempted())
                 .correct(entity.getCorrect())
                 .createdAt(Instant.ofEpochMilli(entity.getCreatedAt()))
                 .updatedAt(Instant.ofEpochMilli(entity.getUpdatedAt()))
-                .completedAt(Instant.ofEpochMilli(entity.getCompletedAt())).build();
+                .completedAt(Instant.ofEpochMilli(entity.getCompletedAt()))
+                .build();
     }
 }

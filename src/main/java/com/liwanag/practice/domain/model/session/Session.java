@@ -5,22 +5,24 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.net.URL;
 import java.time.Instant;
 import java.util.UUID;
 
 @Getter
 @Setter
 @Builder
-public class Session {
-    private UUID sessionId;
-    private UUID userId;
-    private FqId activityFqId;
-    private Integer activityVersion;
+public final class Session {
+    private final UUID sessionId;
+    private final UUID userId;
+    private final FqId activityFqId;
+    private final Integer activityVersion;
     private Status status;
 
     private String currentQuestion;
     private UUID turnToken;
     private Long leaseExpiresAt;
+    private ManifestHandle manifestHandle;
 
     private Integer attempted;
     private Integer correct;

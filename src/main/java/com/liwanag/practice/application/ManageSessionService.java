@@ -26,5 +26,7 @@ public class ManageSessionService implements ManageSession {
 
         var questionPool = Stream.concat(canonicalQuestions.stream(), personalizedQuestions.stream()).toList();
         questionPoolPolicy.randomShuffle(questionPool);
+
+        Session session
     }
 }
