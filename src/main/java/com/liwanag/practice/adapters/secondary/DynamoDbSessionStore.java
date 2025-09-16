@@ -8,6 +8,7 @@ import com.liwanag.practice.ports.secondary.SessionStore;
 import com.liwanag.practice.utils.SessionKeys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 
@@ -15,11 +16,18 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class DynamoDbSessionStore implements SessionStore {
     private final DynamoDbTable<SessionEntity> sessionTable;
     private final SessionMapper sessionMapper;
+
+    public DynamoDbSessionStore(
+            @Qualifier("sessionTable") DynamoDbTable<SessionEntity> sessionTable,
+            SessionMapper sessionMapper
+    ) {
+        this.sessionTable = sessionTable;
+        this.sessionMapper = sessionMapper;
+    }
 
     @Override
     public void save(Session session) {

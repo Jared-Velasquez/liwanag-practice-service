@@ -1,7 +1,7 @@
 package com.liwanag.practice.adapters.secondary.persistence.entity;
 
-import com.liwanag.practice.annotations.TableName;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
@@ -10,7 +10,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
 import java.util.List;
 
 @DynamoDbBean
-@TableName(name = "ContentTable")
+@RequiredArgsConstructor
 @Getter
 @Setter
 public class EpisodeEntity {

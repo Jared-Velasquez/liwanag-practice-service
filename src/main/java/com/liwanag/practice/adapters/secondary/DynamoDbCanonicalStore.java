@@ -10,6 +10,7 @@ import com.liwanag.practice.domain.model.questions.Question;
 import com.liwanag.practice.ports.secondary.CanonicalStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
@@ -25,7 +26,6 @@ import static com.liwanag.practice.utils.ContentKeys.activityPk;
 import static com.liwanag.practice.utils.ContentKeys.liveSk;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class DynamoDbCanonicalStore implements CanonicalStore {
     // Note: all canonical content is stored in one "ContentTable" for faster lookups
@@ -34,34 +34,17 @@ public class DynamoDbCanonicalStore implements CanonicalStore {
     private final DynamoDbTable<ActivityEntity> activityTable;
     private final ActivityMapper activityMapper;
 
-//    @Override
-//    public List<Question> loadQuestions(FqId fqid) throws NoSuchElementException {
-//        // Load the DynamoDB activity entity by its fully qualified activity id
-//        ActivityEntity activity = Optional.ofNullable(
-//                activityTable.getItem(
-//                        Key.builder().partitionValue(activityPk(fqid)).sortValue(liveSk()).build()
-//                )
-//        ).orElseThrow();
-//
-//        // Then take the manifestS3Key from the Activity entity and load the canonical questions JSON from S3
-//        URI manifestURI = URI.create(activity.getManifestS3Key());
-//
-//        ActivityManifest manifest = null;
-//        try {
-//            var is = s3Client.getObject(GetObjectRequest.builder()
-//                    .bucket(manifestURI.getHost())
-//                    .key(manifestURI.getPath().substring(1))
-//                    .build()
-//            );
-//
-//             manifest = new ObjectMapper().readValue(is, ActivityManifest.class);
-//        } catch (Exception e) {
-//            log.error("Exception occurred when loading manifest", e);
-//            throw new NoSuchElementException("Could not load manifest");
-//        }
-//
-//        return manifest.questions();
-//    }
+    public DynamoDbCanonicalStore(
+            @Qualifier("unitTable") DynamoDbTable<UnitEntity> unitTable,
+            @Qualifier("episodeTable") DynamoDbTable<EpisodeEntity> episodeTable,
+            @Qualifier("activityTable") DynamoDbTable<ActivityEntity> activityTable,
+            ActivityMapper activityMapper
+    ) {
+        this.unitTable = unitTable;
+        this.episodeTable = episodeTable;
+        this.activityTable = activityTable;
+        this.activityMapper = activityMapper;
+    }
 
     @Override
     public Activity loadActivity(FqId fqid) throws NoSuchElementException {

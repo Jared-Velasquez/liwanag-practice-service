@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public final class ActivityManifestMapper {
     private final String bucket;
 
-    public ActivityManifestMapper(@Value("${manifest.canonical.bucket}") String bucket) {
+    public ActivityManifestMapper(@Value("${manifest.activity.bucket}") String bucket) {
         this.bucket = bucket;
     }
 

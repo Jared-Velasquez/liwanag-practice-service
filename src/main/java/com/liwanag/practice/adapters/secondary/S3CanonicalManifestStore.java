@@ -22,7 +22,7 @@ public class S3CanonicalManifestStore implements CanonicalManifestStore {
     public S3CanonicalManifestStore(
             ActivityManifestMapper mapper,
             S3Template s3Template,
-            @Value("${manifest.canonical.bucket}") String bucket
+            @Value("${manifest.activity.bucket}") String bucket
     ) {
         this.mapper = mapper;
         this.s3Template = s3Template;
