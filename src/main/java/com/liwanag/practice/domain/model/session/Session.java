@@ -65,7 +65,7 @@ public final class Session {
                 .correct(0)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
-                .completedAt(null)
+                .completedAt(Instant.EPOCH)
                 .build();
     }
 }

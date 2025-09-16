@@ -1,6 +1,7 @@
 package com.liwanag.practice.adapters.secondary.persistence.entity;
 
 import lombok.*;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
@@ -31,11 +32,13 @@ public class SessionEntity {
     private Long completedAt;
 
     @DynamoDbPartitionKey
+    @DynamoDbAttribute("PK")
     public String getPk() {
         return pk;
     }
 
     @DynamoDbSortKey
+    @DynamoDbAttribute("SK")
     public String getSk() {
         return sk;
     }

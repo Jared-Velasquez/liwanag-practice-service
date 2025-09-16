@@ -31,7 +31,7 @@ public class S3SessionManifestStore implements QuestionManifestStore {
         ManifestWrapper wrapper = new ManifestWrapper(questions);
         s3Template.store(bucket, manifestKey, wrapper);
 
-        return SessionManifestHandle.of("m_" + sessionId.toString());
+        return SessionManifestHandle.fromSessionId(sessionId);
     }
 
     @Override

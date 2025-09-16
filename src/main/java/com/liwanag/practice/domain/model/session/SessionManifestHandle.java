@@ -1,5 +1,8 @@
 package com.liwanag.practice.domain.model.session;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.io.Serializable;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -15,13 +18,15 @@ public final class SessionManifestHandle implements Serializable {
     private final String id;
 
     private SessionManifestHandle(String id) {
-        if (id == null || !VALID.matcher("m_" + id).matches()) {
+        if (id == null || !VALID.matcher(id).matches()) {
             throw new IllegalArgumentException("Invalid ManifestHandle format");
         }
         this.id = id;
     }
 
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING) // allow deserialization from a JSON string
     public static SessionManifestHandle of(String id) {
+
         return new SessionManifestHandle(id);
     }
 
@@ -29,6 +34,7 @@ public final class SessionManifestHandle implements Serializable {
         return new SessionManifestHandle("m_" + sessionId);
     }
 
+    @JsonValue
     public String value() {
         return id;
     }
