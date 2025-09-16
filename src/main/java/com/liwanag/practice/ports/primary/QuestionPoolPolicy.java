@@ -9,5 +9,5 @@ public interface QuestionPoolPolicy {
      * Randomly shuffle the list of questions in place.
      * @param questions
      */
-    void randomShuffle(List<Question> questions);
+    List<Question> randomShuffle(List<Question> questions);
 }

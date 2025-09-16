@@ -1,35 +1,30 @@
 package com.liwanag.practice.adapters.secondary.persistence.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
+import java.util.List;
+
 @DynamoDbBean
+// tells Spring Cloud that this entity needs to be mapped to a DynamoDB table; table name must be overridden via DI
+@RequiredArgsConstructor
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class SessionEntity {
+public class UnitEntity {
     private String pk;
     private String sk;
-    private String activityFqId;
-    private Integer activityVersion;
-    private String status;
-
-    private Integer currentIndex;
-    private String turnToken;
-    private Long leaseExpiresAt;
-    private String manifestS3Key;
-
-    private Integer attempted;
-    private Integer correct;
-
-    private Long createdAt;
+    private String entityType; // always UNIT_LIVE
+    private String unitId;
+    private String title;
+    private String description;
+    private List<String> episodeIds;
+    private List<String> episodeFqIds;
     private Long updatedAt;
-    private Long completedAt;
 
     @DynamoDbPartitionKey
     @DynamoDbAttribute("PK")

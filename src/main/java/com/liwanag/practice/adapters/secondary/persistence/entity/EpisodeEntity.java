@@ -1,35 +1,29 @@
 package com.liwanag.practice.adapters.secondary.persistence.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
+import java.util.List;
+
 @DynamoDbBean
+@RequiredArgsConstructor
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class SessionEntity {
+public class EpisodeEntity {
     private String pk;
     private String sk;
-    private String activityFqId;
-    private Integer activityVersion;
-    private String status;
-
-    private Integer currentIndex;
-    private String turnToken;
-    private Long leaseExpiresAt;
-    private String manifestS3Key;
-
-    private Integer attempted;
-    private Integer correct;
-
-    private Long createdAt;
+    private String entityType;
+    private String unitId;
+    private String episodeId;
+    private String title;
+    private List<String> activityIds;
+    private List<String> activityFqIds;
     private Long updatedAt;
-    private Long completedAt;
 
     @DynamoDbPartitionKey
     @DynamoDbAttribute("PK")

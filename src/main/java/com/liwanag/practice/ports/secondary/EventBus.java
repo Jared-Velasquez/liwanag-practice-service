@@ -1,7 +1,11 @@
 package com.liwanag.practice.ports.secondary;
 
-import com.liwanag.practice.domain.model.answer.AnswerEvaluation;
+import com.liwanag.practice.domain.model.event.Event;
 
 public interface EventBus {
-    void emitAnswerEvaluated(AnswerEvaluation evaluation);
+    /**
+     * Emit an event to the event bus.
+     * @param event
+     */
+    void emit(Event event);
 }

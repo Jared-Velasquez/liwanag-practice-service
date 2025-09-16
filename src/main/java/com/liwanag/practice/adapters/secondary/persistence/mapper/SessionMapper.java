@@ -4,15 +4,18 @@ import com.liwanag.practice.adapters.secondary.persistence.entity.SessionEntity;
 import com.liwanag.practice.domain.model.content.FqId;
 import com.liwanag.practice.domain.model.session.Session;
 import com.liwanag.practice.utils.SessionKeys;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Component
+@RequiredArgsConstructor
 public final class SessionMapper {
+    private final SessionManifestMapper manifestMapper;
     public SessionEntity toEntity(Session model) {
-        ManifestMapper manifestMapper = new ManifestMapper("test-bucket");
 
         return SessionEntity.builder()
                 .pk(SessionKeys.sessionPk(model.getUserId()))
@@ -22,7 +25,7 @@ public final class SessionMapper {
                 .status(model.getStatus().toString())
                 .currentIndex(model.getCurrentIndex())
                 .turnToken(model.getTurnToken().toString())
-                .leaseExpiresAt(model.getLeaseExpiresAt())
+                .leaseExpiresAt(model.getLeaseExpiresAt().toEpochMilli())
                 .manifestS3Key(manifestMapper.toS3URL(model.getManifestHandle()))
                 .attempted(model.getAttempted())
                 .correct(model.getCorrect())
@@ -33,7 +36,7 @@ public final class SessionMapper {
     }
 
     public Session toModel(SessionEntity entity) {
-        ManifestMapper manifestMapper = new ManifestMapper("test-bucket");
+        SessionManifestMapper sessionManifestMapper = new SessionManifestMapper("test-bucket");
 
         return Session.builder()
                 .sessionId(SessionKeys.extractSessionId(entity.getSk()))
@@ -43,7 +46,7 @@ public final class SessionMapper {
                 .status(Session.Status.valueOf(entity.getStatus())) // TODO: perform exception handling
                 .currentIndex(entity.getCurrentIndex())
                 .turnToken(UUID.fromString(entity.getTurnToken()))
-                .leaseExpiresAt(entity.getLeaseExpiresAt())
+                .leaseExpiresAt(Instant.ofEpochMilli(entity.getLeaseExpiresAt()))
                 .manifestHandle(manifestMapper.fromS3KeyOrURL(entity.getManifestS3Key()))
                 .attempted(entity.getAttempted())
                 .correct(entity.getCorrect())
