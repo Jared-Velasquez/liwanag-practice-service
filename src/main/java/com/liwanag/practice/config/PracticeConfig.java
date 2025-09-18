@@ -12,8 +12,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class PracticeConfig {
     @Bean
-    public GetNextQuestion getNextQuestion() {
-        return new GetNextQuestionService();
+    public GetNextQuestion getNextQuestion(
+            SessionStore sessionStore
+    ) {
+        return new GetNextQuestionService(sessionStore);
     }
 
     @Bean

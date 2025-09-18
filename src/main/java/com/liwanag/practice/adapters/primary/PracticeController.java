@@ -42,4 +42,20 @@ public class PracticeController {
         // TODO: handle when there are no more questions (end session)
         return ResponseEntity.ok(nextService.claimNext(userId, sessionId));
     }
+
+    @PostMapping("/session/{sessionId}/skip")
+    public ResponseEntity<?> skipQuestion(
+            @RequestHeader(name = "x-cognito-sub") UUID userId,
+            @RequestParam UUID sessionId
+    ) {
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/session/{sessionId}/answer")
+    public ResponseEntity<?> answerQuestion(
+            @RequestHeader(name = "x-cognito-sub") UUID userId,
+            @RequestParam UUID sessionId
+    ) {
+        return ResponseEntity.noContent().build();
+    }
 }
