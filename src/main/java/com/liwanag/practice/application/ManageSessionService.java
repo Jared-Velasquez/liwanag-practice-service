@@ -49,7 +49,7 @@ public class ManageSessionService implements ManageSession {
         log.info("Saving question manifest for sessionId: {}", sessionId);
         var manifestHandle = questionManifestStore.save(sessionId, shuffledQuestions);
 
-        Session session = Session.start(sessionId, userId, fqid, manifestHandle);
+        Session session = Session.start(sessionId, userId, fqid, manifestHandle, shuffledQuestions.size());
         log.info("Saving session with id: {}", sessionId);
         sessionStore.save(session);
         return session;

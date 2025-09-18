@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -35,12 +36,17 @@ public class S3SessionManifestStore implements QuestionManifestStore {
     }
 
     @Override
-    public List<Question> load(UUID sessionId) {
+    public Optional<List<Question>> load(UUID sessionId) {
         // Note: using List.class for deserialization is not type-safe (according to IntelliJ);
         // use a wrapper class
         String manifestKey = key(sessionId);
-        ManifestWrapper wrapper = s3Template.read(bucket, manifestKey, ManifestWrapper.class);
-        return wrapper.questions();
+        try {
+            ManifestWrapper wrapper = s3Template.read(bucket, manifestKey, ManifestWrapper.class);
+            return Optional.of(wrapper.questions());
+        } catch (Exception e) {
+            log.error("Failed to load session manifest from S3 - bucket: {}, key: {}", bucket, manifestKey, e);
+            return Optional.empty();
+        }
     }
 
     private String key(UUID sessionId) {

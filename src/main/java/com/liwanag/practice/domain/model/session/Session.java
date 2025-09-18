@@ -21,6 +21,7 @@ public final class Session {
     private Status status;
 
     private Integer currentIndex;
+    private final Integer totalQuestions;
     private UUID currentAttemptId; // ID for the current question attempt (not shown to client)
     private UUID turnToken; // Proves that the client is answering the currently open turn and not replaying a stale response
     private Instant leaseExpiresAt;
@@ -35,8 +36,8 @@ public final class Session {
 
     private final static Integer LEASE_DURATION_MINUTES = 5;
 
-    public Boolean hasNext(int total) {
-        return this.currentIndex < total;
+    public Boolean hasNext() {
+        return this.currentIndex < this.totalQuestions;
     }
 
     public Integer nextIndex() {
@@ -53,7 +54,7 @@ public final class Session {
         FINISHED
     }
 
-    public static Session start(UUID sessionId, UUID userId, FqId activityFqId, SessionManifestHandle handle) {
+    public static Session start(UUID sessionId, UUID userId, FqId activityFqId, SessionManifestHandle handle, Integer totalQuestions) {
         return Session.builder()
                 .sessionId(sessionId)
                 .userId(userId)
@@ -61,6 +62,7 @@ public final class Session {
                 .activityVersion(null) // TODO: set activity version
                 .status(Status.IDLE)
                 .currentIndex(0)
+                .totalQuestions(totalQuestions)
                 .turnToken(UUID.randomUUID())
                 .leaseExpiresAt(Instant.now().plusSeconds(LEASE_DURATION_MINUTES * 60))
                 .manifestHandle(handle)
@@ -126,12 +128,6 @@ public final class Session {
         this.leaseExpiresAt = null;
         this.currentIndex++;
         this.updatedAt = now;
-    }
-
-    // True if there are more questions given the manifest size
-    public Boolean hasNext(Integer totalItems) {
-        require(totalItems != null && totalItems >= 0, "Total items must be non-negative");
-        return this.currentIndex < totalItems;
     }
 
     public void completeIfDone(Boolean done, Instant now) {

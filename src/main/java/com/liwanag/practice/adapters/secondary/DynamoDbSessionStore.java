@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -35,17 +36,17 @@ public class DynamoDbSessionStore implements SessionStore {
     }
 
     @Override
-    public Session load(UUID sessionId, UUID userId) throws NoSuchElementException {
+    public Optional<Session> load(UUID sessionId, UUID userId) {
         SessionEntity entity = sessionTable.getItem(r -> r.key(k -> k
                 .partitionValue(SessionKeys.sessionPk(userId))
                 .sortValue(SessionKeys.sessionSk(sessionId)
-        )));
+                )));
 
         if (entity == null) {
             log.error("Session not found for userId: {} and sessionId: {}", userId, sessionId);
-            throw new NoSuchElementException("Session not found");
+            return Optional.empty();
         }
 
-        return sessionMapper.toModel(entity);
+        return Optional.of(sessionMapper.toModel(entity));
     }
 }

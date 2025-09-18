@@ -47,16 +47,16 @@ public class DynamoDbCanonicalStore implements CanonicalStore {
     }
 
     @Override
-    public Activity loadActivity(FqId fqid) throws NoSuchElementException {
-        ActivityEntity entity = Optional.ofNullable(
-                activityTable.getItem(
-                        Key.builder().partitionValue(activityPk(fqid)).sortValue(liveSk()).build()
-                )
-        ).orElseThrow(() -> {
-            log.error("Activity not found for fqid: {}", fqid);
-            return new NoSuchElementException("Activity not found");
-        });
+    public Optional<Activity> loadActivity(FqId fqid) throws NoSuchElementException {
+        ActivityEntity entity = activityTable.getItem(
+                Key.builder().partitionValue(activityPk(fqid)).sortValue(liveSk()).build()
+        );
 
-        return activityMapper.toModel(entity);
+        if (entity == null) {
+            log.error("Activity not found for FqId: {}", fqid.toString());
+            return Optional.empty();
+        }
+
+        return Optional.of(activityMapper.toModel(entity));
     }
 }

@@ -6,5 +6,5 @@ import com.liwanag.practice.domain.model.content.FqId;
 import java.util.UUID;
 
 public interface GetNextQuestion {
-    ClaimNext claimNext(UUID userId, UUID SessionId);
+    ClaimNext claimNext(UUID sessionId, UUID userId);
 }

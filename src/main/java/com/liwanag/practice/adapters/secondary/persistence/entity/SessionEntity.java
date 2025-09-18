@@ -20,6 +20,7 @@ public class SessionEntity {
     private String status;
 
     private Integer currentIndex;
+    private Integer totalQuestions;
     private String turnToken;
     private Long leaseExpiresAt;
     private String manifestS3Key;
