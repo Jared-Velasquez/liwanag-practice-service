@@ -37,6 +37,7 @@ public class S3SessionManifestStore implements QuestionManifestStore {
 
     @Override
     public Optional<List<Question>> load(UUID sessionId) {
+        // TODO: perform Caffeine caching
         // Note: using List.class for deserialization is not type-safe (according to IntelliJ);
         // use a wrapper class
         String manifestKey = key(sessionId);
