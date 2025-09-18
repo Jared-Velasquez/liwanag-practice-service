@@ -56,6 +56,8 @@ public class GetNextQuestionService implements GetNextQuestion {
             );
         }
 
+        // case 3: session is active and there's no active lease
+
         UUID newAttemptId = UUID.randomUUID();
         UUID newTurnToken = UUID.randomUUID();
         Instant newLeaseExpiry = now.plusSeconds(LEASE_DURATION_SECONDS);

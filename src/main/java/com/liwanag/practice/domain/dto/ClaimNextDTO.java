@@ -32,14 +32,6 @@ public class ClaimNextDTO {
         FINISHED
     }
 
-    @Getter
-    @Setter
-    @Builder
-    public class AttemptStats {
-        private Integer correct;
-        private Integer attempted;
-    }
-
     public static ClaimNextDTO activeLease(Session session, Question question, UUID turnToken, Instant leaseExpiresAt) {
         return new ClaimNextDTO(
                 ClaimStatus.IN_PROGRESS,
