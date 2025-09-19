@@ -1,6 +1,7 @@
 package com.liwanag.practice.adapters.primary;
 
 import com.liwanag.practice.domain.dto.session.StartSessionRequest;
+import com.liwanag.practice.domain.model.answer.AnswerPayload;
 import com.liwanag.practice.domain.model.content.FqId;
 import com.liwanag.practice.ports.primary.GetNextQuestion;
 import com.liwanag.practice.ports.primary.ManageSession;
@@ -19,7 +20,7 @@ import java.util.UUID;
 public class PracticeController {
     private final ManageSession sessionService;
     private final GetNextQuestion nextService;
-    private final SubmitAnswer evaluationService;
+    private final SubmitAnswer answerService;
 
     @PostMapping("/session/start")
     public ResponseEntity<?> startSession(
@@ -56,8 +57,9 @@ public class PracticeController {
     @PostMapping("/session/{sessionId}/answer")
     public ResponseEntity<?> answerQuestion(
             @RequestHeader(name = "x-cognito-sub") UUID userId,
-            @PathVariable UUID sessionId
+            @PathVariable UUID sessionId,
+            @Valid @RequestBody AnswerPayload answer
     ) {
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(answerService.submit(userId, sessionId, answer));
     }
 }

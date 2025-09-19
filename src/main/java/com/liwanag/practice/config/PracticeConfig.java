@@ -49,7 +49,13 @@ public class PracticeConfig {
     }
 
     @Bean
-    public SubmitAnswer submitAnswer() {
-        return new SubmitAnswerService();
+    public SubmitAnswer submitAnswer(
+            SessionStore sessionStore,
+            QuestionManifestStore questionManifestStore
+    ) {
+        return new SubmitAnswerService(
+                sessionStore,
+                questionManifestStore
+        );
     }
 }
