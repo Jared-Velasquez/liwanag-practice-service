@@ -1,0 +1,18 @@
+package com.liwanag.practice.domain.model.answer;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = MultipleChoiceAnswer.class, name = "MCQ"),
+        @JsonSubTypes.Type(value = MultipleChoiceMultiAnswer.class, name = "MCQ_MULTI"),
+        @JsonSubTypes.Type(value = FillInBlankAnswer.class, name = "FIB"),
+        @JsonSubTypes.Type(value = ClozeAnswer.class, name = "CLOZE")
+})
+public sealed interface AnswerPayload permits MultipleChoiceAnswer, MultipleChoiceMultiAnswer, FillInBlankAnswer, ClozeAnswer  {
+
+}
