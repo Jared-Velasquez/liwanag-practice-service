@@ -1,9 +1,7 @@
 package com.liwanag.practice.application;
 
-import com.liwanag.practice.domain.model.answer.AnswerPayload;
-import com.liwanag.practice.domain.model.answer.AnswerEvaluation;
-import com.liwanag.practice.domain.model.questions.Question;
-import com.liwanag.practice.domain.model.questions.QuestionType;
+import com.liwanag.practice.domain.model.answer.*;
+import com.liwanag.practice.domain.model.questions.*;
 import com.liwanag.practice.domain.model.session.Session;
 import com.liwanag.practice.handler.ServiceInconsistencyException;
 import com.liwanag.practice.ports.primary.SubmitAnswer;
@@ -12,6 +10,7 @@ import com.liwanag.practice.ports.secondary.SessionStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.Instant;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -41,11 +40,20 @@ public class SubmitAnswerService implements SubmitAnswer {
         }
 
         // case 3: session has an active lease
-        // TODO: Evaluate the answer, update the session state, and save the session
+        // evaluate the answer
+        log.info("Evaluating answer for session: {}", sessionId);
+        log.info("Current question index: {}", session.getCurrentIndex());
         Question currentQuestion = questionManifestStore.load(sessionId)
                 .orElseThrow(() -> new ServiceInconsistencyException("Questions not found for session: " + sessionId))
                 .get(session.getCurrentIndex());
+        log.info("Evaluating answer for question: {}", currentQuestion.qid());
         AnswerEvaluation evaluation = evaluate(currentQuestion, answer);
+
+        // update session
+        log.info("Updating session: {}", sessionId);
+        session.applyAnswer(evaluation.getShouldAdvance(), Instant.now());
+        sessionStore.save(session);
+
         // TODO: emit AnswerEvaluated event
 
         return null;
@@ -60,57 +68,36 @@ public class SubmitAnswerService implements SubmitAnswer {
             throw new IllegalArgumentException("Answer type does not match question type");
         }
 
-        QuestionType questionType;
-        // Convert type to QuestionType enum
-        try {
-            questionType = QuestionType.valueOf(question.type());
-        } catch (IllegalArgumentException e) {
-            // Question type not in enum even though it passed validation
-            throw new ServiceInconsistencyException("Unknown question type: " + question.type());
-        }
+        return switch (answer) {
+            case MultipleChoiceAnswer ans when question instanceof MultipleChoiceQuestion mcq -> evaluateMCQ(mcq, ans);
+            case MultipleChoiceMultiAnswer ans when question instanceof MultipleChoiceMultiQuestion mcmq -> evaluateMCMQ(mcmq, ans);
+            case FillInBlankAnswer ans when question instanceof FillInBlankQuestion fibq -> evaluateFIBQ(fibq, ans);
+            case ClozeAnswer ans when question instanceof ClozeQuestion clozeQ -> evaluateClozeQ(clozeQ, ans);
 
-        AnswerEvaluation result;
-        switch (questionType) {
-            case MCQ -> {
-                result = evaluateMCQ(question, answer);
-            }
-            case MCQ_MULTI -> {
-                result = evaluateMCQM(question, answer);
-            }
-            case FIB -> {
-                result = evaluateFIB(question, answer);
-            }
-            case CLOZE -> {
-                result = evaluateCloze(question, answer);
-            }
-            default -> {
-                // Even though all enum values are covered, IntelliJ requires a default case
-                throw new ServiceInconsistencyException("Unhandled question type: " + questionType);
-            }
-        }
-
-        // TODO: update session
-        // TODO: emit event
-
-        return result;
+            // Mismatches
+            case MultipleChoiceAnswer ans -> throw new IllegalArgumentException("Answer type does not match question type");
+            case MultipleChoiceMultiAnswer ans -> throw new IllegalArgumentException("Answer type does not match question type");
+            case FillInBlankAnswer ans -> throw new IllegalArgumentException("Answer type does not match question type");
+            case ClozeAnswer ans -> throw new IllegalArgumentException("Answer type does not match question type");
+        };
     }
 
-    private AnswerEvaluation evaluateMCQ(Question question, AnswerPayload answer) {
+    private AnswerEvaluation evaluateMCQ(MultipleChoiceQuestion question, MultipleChoiceAnswer answer) {
         // TODO: Implement MCQ evaluation logic
         return null;
     }
 
-    private AnswerEvaluation evaluateMCQM(Question question, AnswerPayload answer) {
+    private AnswerEvaluation evaluateMCMQ(MultipleChoiceMultiQuestion question, MultipleChoiceMultiAnswer answer) {
         // TODO: Implement MCQ_MULTI evaluation logic
         return null;
     }
 
-    private AnswerEvaluation evaluateFIB(Question question, AnswerPayload answer) {
+    private AnswerEvaluation evaluateFIBQ(FillInBlankQuestion question, FillInBlankAnswer answer) {
         // TODO: Implement FIB evaluation logic
         return null;
     }
 
-    private AnswerEvaluation evaluateCloze(Question question, AnswerPayload answer) {
+    private AnswerEvaluation evaluateClozeQ(ClozeQuestion question, ClozeAnswer answer) {
         // TODO: Implement CLOZE evaluation logic
         return null;
     }
