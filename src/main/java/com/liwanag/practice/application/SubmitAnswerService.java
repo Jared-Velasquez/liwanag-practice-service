@@ -29,7 +29,9 @@ public class SubmitAnswerService implements SubmitAnswer {
         // 2. The session has not yet served a question to the user (no active lease)
         // 3. The session has an active lease
 
-        if (sessionId != answer.sessionId()) {
+        if (!sessionId.equals(answer.sessionId())) {
+            // print out sessionId and answer's sessionId
+            log.info("Session ID mismatch: sessionId={}, answer.sessionId={}", sessionId, answer.sessionId());
             throw new IllegalArgumentException("Session ID in URL does not match session ID in answer payload");
         }
 
@@ -99,7 +101,7 @@ public class SubmitAnswerService implements SubmitAnswer {
                 .map(Choice::id)
                 .orElseThrow(() -> new ServiceInconsistencyException("No correct choice found for question: " + question.qid()));
 
-        if (answer.getChoiceId().equals(correctQid)) {
+        if (answer.choiceId().equals(correctQid)) {
             // Correct answer
             return AnswerEvaluation.builder()
                     .attemptId(answer.attemptId())
@@ -132,7 +134,7 @@ public class SubmitAnswerService implements SubmitAnswer {
                 .filter(Choice::ok)
                 .map(Choice::id)
                 .toList();
-        List<String> selectedChoiceIds = answer.getChoiceIds();
+        List<String> selectedChoiceIds = answer.choiceIds();
 
         // Ensure no duplicates were selected in the answer
         if (selectedChoiceIds.size() != new HashSet<>(selectedChoiceIds).size()) {
@@ -171,7 +173,7 @@ public class SubmitAnswerService implements SubmitAnswer {
         List<String> acceptableAnswers = question.evaluation().acceptableAnswers();
 
         for (String acc : acceptableAnswers) {
-            int distance = levenshteinDistance(acc.toLowerCase(), answer.getText().toLowerCase());
+            int distance = levenshteinDistance(acc.toLowerCase(), answer.text().toLowerCase());
             if (distance <= question.evaluation().levenshtein().maxDistance()) {
                 // Correct answer
                 return AnswerEvaluation.builder()
@@ -225,7 +227,7 @@ public class SubmitAnswerService implements SubmitAnswer {
     private AnswerEvaluation evaluateClozeQ(ClozeQuestion question, ClozeAnswer answer) {
         // TODO: Implement CLOZE evaluation logic
         List<ClozeBlank> blanks = question.blanks();
-        List<String> answers = answer.getTexts();
+        List<String> answers = answer.texts();
 
         // Answers must match number and order of blanks
         if (blanks.size() != answers.size()) {

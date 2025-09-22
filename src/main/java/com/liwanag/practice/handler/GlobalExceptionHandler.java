@@ -27,6 +27,12 @@ class GlobalExceptionHandler {
         return Map.of("error", "Header must be a UUID", "header", ex.getName());
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    Map<String, Object> illegalArgument(IllegalArgumentException ex) {
+        return Map.of("error", "Bad Request", "message", ex.getMessage());
+    }
+
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     Map<String, Object> notFound(NoSuchElementException ex) {

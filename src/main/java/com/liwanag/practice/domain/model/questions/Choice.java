@@ -1,4 +1,6 @@
 package com.liwanag.practice.domain.model.questions;
 
-public record Choice(String id, String t, boolean ok) {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public record Choice(String id, String t, @JsonIgnore boolean ok) {
 }
