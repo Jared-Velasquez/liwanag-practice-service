@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.util.UUID;
+
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     property = "type",
@@ -17,4 +19,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public sealed interface AnswerPayload permits MultipleChoiceAnswer, MultipleChoiceMultiAnswer, FillInBlankAnswer, ClozeAnswer  {
     String type();
+    UUID attemptId();
+    UUID sessionId();
 }

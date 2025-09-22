@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-@Getter
-@Setter
-@Builder
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 public final class FillInBlankAnswer implements AnswerPayload {
@@ -14,6 +13,16 @@ public final class FillInBlankAnswer implements AnswerPayload {
     private String type;
     @Size(min = 1, max = 256)
     private String text;
+    private UUID attemptId;
+    private UUID sessionId;
+
+    public UUID attemptId() {
+        return attemptId;
+    }
+
+    public UUID sessionId() {
+        return sessionId;
+    }
 
     // Manually create getters to override type()
     @Override

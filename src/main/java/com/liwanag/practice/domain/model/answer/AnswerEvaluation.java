@@ -23,9 +23,6 @@ public class AnswerEvaluation {
     private UUID sessionId;
     @NotBlank
     private String questionId;
-    @NotNull
-    @Min(0)
-    private Integer index;
 
     @NotNull
     private Result result;
