@@ -1,9 +1,9 @@
-package com.liwanag.practice.domain.dto.questions;
+package com.liwanag.practice.adapters.primary.web.dto.questions;
 
-import com.liwanag.practice.domain.model.questions.ClozeBlank;
+import lombok.Builder;
 
 import java.util.List;
-import java.util.Map;
 
+@Builder
 public record ClozeQuestionDTO(String qid, String type, String difficulty, List<String> tags, String text) implements QuestionDTO {
 }

@@ -11,7 +11,8 @@ import java.util.UUID;
 public record ClozeAnswer(
         @JsonProperty("type")
         String type,
-        @Size(min = 1)
+        @Size(min = 1, max = 5)
+        @NotNull
         List<String> texts, // ensure each element is not blank
         @NotNull
         UUID attemptId,

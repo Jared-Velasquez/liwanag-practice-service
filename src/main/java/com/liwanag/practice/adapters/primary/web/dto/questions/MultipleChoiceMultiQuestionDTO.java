@@ -1,7 +1,4 @@
-package com.liwanag.practice.domain.dto.questions;
-
-import com.liwanag.practice.domain.model.questions.Choice;
-import com.liwanag.practice.domain.model.questions.EvalMulti;
+package com.liwanag.practice.adapters.primary.web.dto.questions;
 
 import java.util.List;
 import java.util.Map;

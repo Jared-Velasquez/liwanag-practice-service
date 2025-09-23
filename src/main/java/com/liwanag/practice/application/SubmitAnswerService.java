@@ -7,6 +7,7 @@ import com.liwanag.practice.handler.ServiceInconsistencyException;
 import com.liwanag.practice.ports.primary.SubmitAnswer;
 import com.liwanag.practice.ports.secondary.QuestionManifestStore;
 import com.liwanag.practice.ports.secondary.SessionStore;
+import com.liwanag.practice.utils.SessionConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,12 +40,12 @@ public class SubmitAnswerService implements SubmitAnswer {
 
         // case 1: session has finished
         if (session.getStatus() == Session.Status.FINISHED) {
-            throw new IllegalStateException("Session has already finished");
+            throw new IllegalArgumentException("Session has already finished");
         }
 
         // case 2: session has no active lease
         if (session.getTurnToken() == null || session.getLeaseExpiresAt() == null || session.getLeaseExpiresAt().isBefore(java.time.Instant.now())) {
-            throw new IllegalStateException("No active lease for session");
+            throw new IllegalArgumentException("No active lease for session");
         }
 
         // case 3: session has an active lease
@@ -60,6 +61,17 @@ public class SubmitAnswerService implements SubmitAnswer {
         // update session
         log.info("Updating session: {}", sessionId);
         session.applyAnswer(evaluation.getShouldAdvance(), Instant.now());
+
+        // After applying answer, refresh the session object with a new attempt
+        if (!evaluation.getShouldAdvance()) {
+            log.info("User answered incorrectly, not advancing to next question");
+            UUID newAttemptId = UUID.randomUUID();
+            UUID newTurnToken = UUID.randomUUID();
+            Instant newLeaseExpiry = Instant.now().plusSeconds(SessionConstants.LEASE_DURATION_SECONDS);
+
+            session.openAttempt(newAttemptId, newTurnToken, newLeaseExpiry);
+        }
+
         sessionStore.save(session);
 
         // TODO: emit AnswerEvaluated event

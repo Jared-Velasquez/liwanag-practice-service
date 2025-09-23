@@ -11,6 +11,7 @@ public record FillInBlankAnswer(
         @JsonProperty("type")
         String type,
         @Size(min = 1, max = 256)
+        @NotNull
         String text, // ensure not blank
         @NotNull
         UUID attemptId,

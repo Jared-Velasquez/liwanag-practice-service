@@ -25,8 +25,11 @@ public final class SessionMapper {
                 .status(model.getStatus().toString())
                 .currentIndex(model.getCurrentIndex())
                 .totalQuestions(model.getTotalQuestions())
-                .turnToken(model.getTurnToken().toString())
-                .leaseExpiresAt(model.getLeaseExpiresAt().toEpochMilli())
+                // only convert to string if not null
+                .turnToken(model.getTurnToken() != null ? model.getTurnToken().toString() : null)
+                .currentAttemptId(model.getCurrentAttemptId() != null ? model.getCurrentAttemptId().toString() : null)
+                // only convert to epoch milli if not null
+                .leaseExpiresAt(model.getLeaseExpiresAt() != null ? model.getLeaseExpiresAt().toEpochMilli() : null)
                 .manifestS3Key(manifestMapper.toS3URL(model.getManifestHandle()))
                 .attempted(model.getAttempted())
                 .correct(model.getCorrect())
@@ -47,8 +50,11 @@ public final class SessionMapper {
                 .status(Session.Status.valueOf(entity.getStatus())) // TODO: perform exception handling
                 .currentIndex(entity.getCurrentIndex())
                 .totalQuestions(entity.getTotalQuestions())
-                .turnToken(UUID.fromString(entity.getTurnToken()))
-                .leaseExpiresAt(Instant.ofEpochMilli(entity.getLeaseExpiresAt()))
+                // only convert to UUID if not null
+                .turnToken(entity.getTurnToken() != null ? UUID.fromString(entity.getTurnToken()) : null)
+                .currentAttemptId(entity.getCurrentAttemptId() != null ? UUID.fromString(entity.getCurrentAttemptId()) : null)
+                // only convert to Instant if not null
+                .leaseExpiresAt(entity.getLeaseExpiresAt() != null ? Instant.ofEpochMilli(entity.getLeaseExpiresAt()) : null)
                 .manifestHandle(manifestMapper.fromS3KeyOrURL(entity.getManifestS3Key()))
                 .attempted(entity.getAttempted())
                 .correct(entity.getCorrect())

@@ -1,4 +1,4 @@
-package com.liwanag.practice.domain.dto.questions;
+package com.liwanag.practice.adapters.primary.web.dto.questions;
 
 import java.util.List;
 

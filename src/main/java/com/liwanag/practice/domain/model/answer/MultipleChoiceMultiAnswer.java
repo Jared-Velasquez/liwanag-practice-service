@@ -12,6 +12,7 @@ public record MultipleChoiceMultiAnswer(
         @JsonProperty("type")
         String type,
         @Size(min = 1, max = 4)
+        @NotNull
         List<String> choiceIds,
         @NotNull
         UUID attemptId,

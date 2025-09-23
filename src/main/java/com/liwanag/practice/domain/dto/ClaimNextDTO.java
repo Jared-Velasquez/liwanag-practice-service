@@ -1,5 +1,6 @@
 package com.liwanag.practice.domain.dto;
 
+import com.liwanag.practice.adapters.primary.web.dto.questions.QuestionDTO;
 import com.liwanag.practice.domain.model.questions.Question;
 import com.liwanag.practice.domain.model.session.Session;
 import lombok.*;
@@ -25,14 +26,14 @@ public class ClaimNextDTO {
     private UUID turnToken;
     private Instant leaseExpiresAt;
 
-    private Question question; // null when status is FINISHED
+    private QuestionDTO question; // null when status is FINISHED
 
     public enum ClaimStatus {
         IN_PROGRESS,
         FINISHED
     }
 
-    public static ClaimNextDTO activeLease(Session session, Question question, UUID turnToken, Instant leaseExpiresAt) {
+    public static ClaimNextDTO activeLease(Session session, QuestionDTO question, UUID turnToken, Instant leaseExpiresAt) {
         return new ClaimNextDTO(
                 ClaimStatus.IN_PROGRESS,
                 session.getSessionId().toString(),
