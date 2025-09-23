@@ -6,6 +6,7 @@ import com.liwanag.practice.domain.model.questions.Question;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public interface CanonicalStore {
     /**
@@ -13,7 +14,7 @@ public interface CanonicalStore {
      * @param fqid Fully qualified activity ID
      * @return Activity object
      */
-    Activity loadActivity(FqId fqid) throws NoSuchElementException;
+    Optional<Activity> loadActivity(FqId fqid) throws NoSuchElementException;
 
     /**
      * Load the full canonical Liwanag content (units, their episodes, and their activities)

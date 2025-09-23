@@ -1,11 +1,12 @@
 package com.liwanag.practice.ports.primary;
 
-import com.liwanag.practice.domain.model.answer.Answer;
 import com.liwanag.practice.domain.model.answer.AnswerEvaluation;
-import com.liwanag.practice.domain.model.content.FqId;
+import com.liwanag.practice.domain.model.answer.AnswerPayload;
+import com.liwanag.practice.domain.model.questions.Question;
 
 import java.util.UUID;
 
 public interface SubmitAnswer {
-    AnswerEvaluation submitAnswer(UUID userId, UUID sessionId, Answer answer);
+    AnswerEvaluation submit(UUID userId, UUID sessionId, AnswerPayload answer);
+    AnswerEvaluation evaluate(Question question, AnswerPayload answer);
 }

@@ -21,6 +21,7 @@ public final class Session {
     private Status status;
 
     private Integer currentIndex;
+    private final Integer totalQuestions;
     private UUID currentAttemptId; // ID for the current question attempt (not shown to client)
     private UUID turnToken; // Proves that the client is answering the currently open turn and not replaying a stale response
     private Instant leaseExpiresAt;
@@ -35,8 +36,8 @@ public final class Session {
 
     private final static Integer LEASE_DURATION_MINUTES = 5;
 
-    public Boolean hasNext(int total) {
-        return this.currentIndex < total;
+    public Boolean hasNext() {
+        return this.currentIndex < this.totalQuestions;
     }
 
     public Integer nextIndex() {
@@ -53,7 +54,7 @@ public final class Session {
         FINISHED
     }
 
-    public static Session start(UUID sessionId, UUID userId, FqId activityFqId, SessionManifestHandle handle) {
+    public static Session start(UUID sessionId, UUID userId, FqId activityFqId, SessionManifestHandle handle, Integer totalQuestions) {
         return Session.builder()
                 .sessionId(sessionId)
                 .userId(userId)
@@ -61,8 +62,9 @@ public final class Session {
                 .activityVersion(null) // TODO: set activity version
                 .status(Status.IDLE)
                 .currentIndex(0)
-                .turnToken(UUID.randomUUID())
-                .leaseExpiresAt(Instant.now().plusSeconds(LEASE_DURATION_MINUTES * 60))
+                .totalQuestions(totalQuestions)
+                .turnToken(null)
+                .leaseExpiresAt(null)
                 .manifestHandle(handle)
                 .attempted(0)
                 .correct(0)
@@ -84,9 +86,13 @@ public final class Session {
 
     // Open a new attempt for the current question
     public void openAttempt(UUID attemptId, UUID turnToken, Instant leaseUntil) {
-        require(status == Status.IN_PROGRESS || status == Status.IDLE, "Session not active");
+        // If an attempt is not open (IDLE), move to IN_PROGRESS and open attempt (populate attemptId, turnToken, leaseUntil)
+        // If an attempt is already open (IN_PROGRESS), refresh attempt
+        require(status == Status.IN_PROGRESS || status == Status.IDLE, "Session must be in IDLE state to mark as IN_PROGRESS");
         require(this.currentAttemptId == null, "There is already an open attempt");
 
+        this.status = Status.IN_PROGRESS;
+        this.updatedAt = Instant.now();
         this.currentAttemptId = attemptId;
         this.turnToken = turnToken;
         this.leaseExpiresAt = leaseUntil;
@@ -102,17 +108,18 @@ public final class Session {
 
     // Apply the answer, close attempt, and advance to next question
     public void applyAnswer(Boolean isCorrect, Instant now) {
+        log.info("State before applying answer: {}", status.toString());
         require(status == Status.IN_PROGRESS, "Session not active");
         require(this.currentAttemptId != null, "No open attempt to apply answer to");
 
         this.attempted++;
         if (isCorrect != null && isCorrect) {
+            this.currentIndex++;
             this.correct++;
         }
         this.currentAttemptId = null;
         this.turnToken = null;
         this.leaseExpiresAt = null;
-        this.currentIndex++;
         this.updatedAt = now;
     }
 
@@ -126,12 +133,6 @@ public final class Session {
         this.leaseExpiresAt = null;
         this.currentIndex++;
         this.updatedAt = now;
-    }
-
-    // True if there are more questions given the manifest size
-    public Boolean hasNext(Integer totalItems) {
-        require(totalItems != null && totalItems >= 0, "Total items must be non-negative");
-        return this.currentIndex < totalItems;
     }
 
     public void completeIfDone(Boolean done, Instant now) {

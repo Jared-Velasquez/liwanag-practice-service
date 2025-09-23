@@ -1,10 +1,12 @@
 package com.liwanag.practice.adapters.primary;
 
 import com.liwanag.practice.domain.dto.session.StartSessionRequest;
+import com.liwanag.practice.domain.model.answer.AnswerPayload;
 import com.liwanag.practice.domain.model.content.FqId;
 import com.liwanag.practice.ports.primary.GetNextQuestion;
 import com.liwanag.practice.ports.primary.ManageSession;
 import com.liwanag.practice.ports.primary.SubmitAnswer;
+import com.liwanag.practice.utils.Validators;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,7 @@ import java.util.UUID;
 public class PracticeController {
     private final ManageSession sessionService;
     private final GetNextQuestion nextService;
-    private final SubmitAnswer evaluationService;
+    private final SubmitAnswer answerService;
 
     @PostMapping("/session/start")
     public ResponseEntity<?> startSession(
@@ -37,9 +39,27 @@ public class PracticeController {
     @PostMapping("/session/{sessionId}/next")
     public ResponseEntity<?> getNextQuestion(
             @RequestHeader(name = "x-cognito-sub") UUID userId,
-            @RequestParam UUID sessionId) {
+            @PathVariable UUID sessionId) {
         // TODO: handle errors such as session not found, double-next, answer not provided
         // TODO: handle when there are no more questions (end session)
-        return ResponseEntity.ok(nextService.claimNext(userId, sessionId));
+
+        return ResponseEntity.ok(nextService.claimNext(sessionId, userId));
+    }
+
+    @PostMapping("/session/{sessionId}/skip")
+    public ResponseEntity<?> skipQuestion(
+            @RequestHeader(name = "x-cognito-sub") UUID userId,
+            @PathVariable UUID sessionId
+    ) {
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/session/{sessionId}/answer")
+    public ResponseEntity<?> answerQuestion(
+            @RequestHeader(name = "x-cognito-sub") UUID userId,
+            @PathVariable UUID sessionId,
+            @Valid @RequestBody AnswerPayload answer
+    ) {
+        return ResponseEntity.ok(answerService.submit(userId, sessionId, answer));
     }
 }

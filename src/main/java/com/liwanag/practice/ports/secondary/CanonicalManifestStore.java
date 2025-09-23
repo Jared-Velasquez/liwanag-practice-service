@@ -5,7 +5,8 @@ import com.liwanag.practice.domain.model.content.FqId;
 import com.liwanag.practice.domain.model.questions.Question;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CanonicalManifestStore {
-    List<Question> load(ActivityManifestHandle handle);
+    Optional<List<Question>> load(ActivityManifestHandle handle);
 }
