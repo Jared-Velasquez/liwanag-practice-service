@@ -3,10 +3,7 @@ package com.liwanag.practice.config;
 import com.liwanag.practice.adapters.primary.web.mapper.QuestionMapper;
 import com.liwanag.practice.application.*;
 import com.liwanag.practice.ports.primary.*;
-import com.liwanag.practice.ports.secondary.CanonicalManifestStore;
-import com.liwanag.practice.ports.secondary.CanonicalStore;
-import com.liwanag.practice.ports.secondary.QuestionManifestStore;
-import com.liwanag.practice.ports.secondary.SessionStore;
+import com.liwanag.practice.ports.secondary.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -53,11 +50,13 @@ public class PracticeConfig {
     @Bean
     public SubmitAnswer submitAnswer(
             SessionStore sessionStore,
-            QuestionManifestStore questionManifestStore
+            QuestionManifestStore questionManifestStore,
+            EventBus eventBus
     ) {
         return new SubmitAnswerService(
                 sessionStore,
-                questionManifestStore
+                questionManifestStore,
+                eventBus
         );
     }
 }

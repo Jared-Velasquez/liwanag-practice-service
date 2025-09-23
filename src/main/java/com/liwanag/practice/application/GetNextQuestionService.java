@@ -50,6 +50,12 @@ public class GetNextQuestionService implements GetNextQuestion {
         List<Question> questions = questionManifestStore.load(sessionId).orElseThrow(() -> new ServiceInconsistencyException("Questions not found for session: " + sessionId));
         Question currentQuestion = questions.get(session.getCurrentIndex());
 
+        // TODO: if the session's lease expires, the logic goes and tries to serve a new question, but the
+        // currentAttemptId is not cleared
+
+        // TODO: what should happen if the lease expires?
+        // TODO: how should the turn token work?
+
         Instant now = Instant.now();
         if (session.getTurnToken() != null && session.getLeaseExpiresAt() != null && session.getLeaseExpiresAt().isAfter(now)) {
             log.info("Active lease found for session {}, turnToken {}, leaseExpiresAt {}", sessionId, session.getTurnToken(), session.getLeaseExpiresAt());

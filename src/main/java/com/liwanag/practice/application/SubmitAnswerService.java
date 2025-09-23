@@ -1,10 +1,12 @@
 package com.liwanag.practice.application;
 
 import com.liwanag.practice.domain.model.answer.*;
+import com.liwanag.practice.domain.model.event.AnswerEvaluatedEvent;
 import com.liwanag.practice.domain.model.questions.*;
 import com.liwanag.practice.domain.model.session.Session;
 import com.liwanag.practice.handler.ServiceInconsistencyException;
 import com.liwanag.practice.ports.primary.SubmitAnswer;
+import com.liwanag.practice.ports.secondary.EventBus;
 import com.liwanag.practice.ports.secondary.QuestionManifestStore;
 import com.liwanag.practice.ports.secondary.SessionStore;
 import com.liwanag.practice.utils.SessionConstants;
@@ -22,6 +24,7 @@ import java.util.UUID;
 public class SubmitAnswerService implements SubmitAnswer {
     private final SessionStore sessionStore;
     private final QuestionManifestStore questionManifestStore;
+    private final EventBus eventBus;
 
     @Override
     public AnswerEvaluation submit(UUID userId, UUID sessionId, AnswerPayload answer) {
@@ -72,11 +75,13 @@ public class SubmitAnswerService implements SubmitAnswer {
             session.openAttempt(newAttemptId, newTurnToken, newLeaseExpiry);
         }
 
+        // TODO: ensure that attempts increment properly for incorrect answers
         sessionStore.save(session);
 
-        // TODO: emit AnswerEvaluated event
-
-        return null;
+        log.info("Emitting AnswerEvaluatedEvent for session: {}", sessionId);
+        AnswerEvaluatedEvent event = AnswerEvaluatedEvent.toEvent(evaluation, userId, session.getActivityFqId());
+        eventBus.emit(event);
+        return evaluation;
     }
 
     @Override

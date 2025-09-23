@@ -1,4 +1,4 @@
 package com.liwanag.practice.domain.model.event;
 
-public interface Event {
+public sealed interface Event permits AnswerEvaluatedEvent, SessionFinishedEvent {
 }
