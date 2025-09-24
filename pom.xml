@@ -61,6 +61,11 @@
 			<artifactId>spring-cloud-aws-starter-s3</artifactId>
 			<version>3.3.1</version>
 		</dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>eventbridge</artifactId>
+            <version>2.34.1</version>
+        </dependency>
 		<dependency>
 			<groupId>io.vavr</groupId>
 			<artifactId>vavr</artifactId>

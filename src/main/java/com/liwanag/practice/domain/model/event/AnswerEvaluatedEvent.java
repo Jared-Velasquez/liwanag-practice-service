@@ -6,27 +6,17 @@ import com.liwanag.practice.domain.model.content.FqId;
 import com.liwanag.practice.handler.ServiceInconsistencyException;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
 import java.util.UUID;
 
-@Getter
-@Setter
+/**
+ * @param fqid Must be activity FqId
+ */
 @Builder
-public final class AnswerEvaluatedEvent implements Event {
-    @NotNull
-    private final UUID userId;
-    @NotNull
-    private final String questionId;
-    @NotNull
-    private final FqId fqid; // Must be activity FqId
-    @NotNull
-    private final Result result;
-    @NotNull
-    private final Instant timestamp;
-
+public record AnswerEvaluatedEvent(@NotNull UUID userId, @NotNull String questionId, @NotNull FqId fqid,
+                                   @NotNull Result result, @NotNull Instant timestamp) implements Event {
     public static AnswerEvaluatedEvent toEvent(AnswerEvaluation model, UUID userId, FqId fqid) {
         if (!fqid.isActivityFqId()) {
             throw new ServiceInconsistencyException("FqId must be an activity FqId");
