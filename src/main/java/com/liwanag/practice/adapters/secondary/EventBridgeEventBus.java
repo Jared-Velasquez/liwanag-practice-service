@@ -1,7 +1,9 @@
 package com.liwanag.practice.adapters.secondary;
 
 import com.liwanag.practice.adapters.secondary.event.mapper.EventMapper;
+import com.liwanag.practice.domain.model.event.AnswerEvaluatedEvent;
 import com.liwanag.practice.domain.model.event.Event;
+import com.liwanag.practice.domain.model.event.SessionFinishedEvent;
 import com.liwanag.practice.ports.secondary.EventBus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +17,15 @@ import software.amazon.awssdk.services.eventbridge.model.PutEventsRequestEntry;
 public class EventBridgeEventBus implements EventBus {
     private final EventBridgeClient eventBridgeClient;
     private final EventMapper eventMapper;
+    private final String EVENT_BUS_NAME = "LiwanagEventBus";
+    private final String SOURCE = "practice.service";
+
+    @Override
     public void emit(Event event) {
         PutEventsRequestEntry entry = PutEventsRequestEntry.builder()
-                .eventBusName("LiwanagEventBus") // Replace with your EventBridge bus name
-                .source("scoring.service") // Replace with your source
-                .detailType("AnswerEvaluated")
+                .eventBusName(EVENT_BUS_NAME) // Replace with your EventBridge bus name
+                .source(SOURCE) // Replace with your source
+                .detailType(event.detailType().toString())
                 .detail(eventMapper.toJson(event))
                 .build();
         try {

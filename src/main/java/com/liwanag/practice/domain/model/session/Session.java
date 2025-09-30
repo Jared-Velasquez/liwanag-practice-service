@@ -117,6 +117,11 @@ public final class Session {
             this.currentIndex++;
             this.correct++;
         }
+        // Set to finished if this was the last question
+        if (!hasNext()) {
+            this.status = Status.FINISHED;
+            this.completedAt = now;
+        }
         this.currentAttemptId = null;
         this.turnToken = null;
         this.leaseExpiresAt = null;

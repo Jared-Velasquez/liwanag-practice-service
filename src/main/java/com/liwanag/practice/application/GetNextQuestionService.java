@@ -36,12 +36,14 @@ public class GetNextQuestionService implements GetNextQuestion {
         Session session = sessionStore.load(sessionId, userId).orElseThrow(() -> new NoSuchElementException("Session not found"));
 
         // case 1: session is inactive
-        if (session.getCurrentIndex() >= session.getTotalQuestions()) {
+        if (!session.hasNext()) {
             log.info("Session {} is already finished", sessionId);
-            if (session.getStatus() != Session.Status.FINISHED) {
-                session.completeIfDone(true, Instant.now());
-                sessionStore.save(session);
-            }
+//            if (session.getStatus() != Session.Status.FINISHED) {
+//                // TODO: is this needed if session automatically completes when last question is answered?
+//                // Handled in the answer submission logic
+//                //session.completeIfDone(true, Instant.now());
+//                sessionStore.save(session);
+//            }
 
             return ClaimNextDTO.finished(session);
         }

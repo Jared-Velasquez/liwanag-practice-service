@@ -14,7 +14,7 @@ public interface CanonicalStore {
      * @param fqid Fully qualified activity ID
      * @return Activity object
      */
-    Optional<Activity> loadActivity(FqId fqid) throws NoSuchElementException;
+    Optional<Activity> loadActivity(FqId fqid);
 
     /**
      * Load the full canonical Liwanag content (units, their episodes, and their activities)
