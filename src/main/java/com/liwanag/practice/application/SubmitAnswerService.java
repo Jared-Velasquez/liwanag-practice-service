@@ -2,6 +2,7 @@ package com.liwanag.practice.application;
 
 import com.liwanag.practice.domain.model.answer.*;
 import com.liwanag.practice.domain.model.event.AnswerEvaluatedEvent;
+import com.liwanag.practice.domain.model.event.SessionFinishedEvent;
 import com.liwanag.practice.domain.model.questions.*;
 import com.liwanag.practice.domain.model.session.Session;
 import com.liwanag.practice.handler.ServiceInconsistencyException;
@@ -66,7 +67,8 @@ public class SubmitAnswerService implements SubmitAnswer {
         session.applyAnswer(evaluation.getShouldAdvance(), Instant.now());
 
         // After applying answer, refresh the session object with a new attempt
-        if (!evaluation.getShouldAdvance()) {
+        if (!evaluation.getShouldAdvance() && session.getStatus() != Session.Status.FINISHED) {
+            // User answered incorrectly, do not advance to next question
             log.info("User answered incorrectly, not advancing to next question");
             UUID newAttemptId = UUID.randomUUID();
             UUID newTurnToken = UUID.randomUUID();
@@ -81,6 +83,20 @@ public class SubmitAnswerService implements SubmitAnswer {
         log.info("Emitting AnswerEvaluatedEvent for session: {}", sessionId);
         AnswerEvaluatedEvent event = AnswerEvaluatedEvent.toEvent(evaluation, userId, session.getActivityFqId());
         eventBus.emit(event);
+
+        log.info("Session status after applying answer: {}", session.getStatus());
+
+        if (session.getStatus() == Session.Status.FINISHED) {
+            log.info("Emitting SessionFinishedEvent for session: {}", sessionId);
+            SessionFinishedEvent sessionFinishedEvent = SessionFinishedEvent.builder()
+                    .userId(userId)
+                    .sessionId(sessionId)
+                    .fqid(session.getActivityFqId())
+                    .timestamp(Instant.now())
+                    .build();
+            eventBus.emit(sessionFinishedEvent);
+        }
+
         return evaluation;
     }
 
