@@ -15,13 +15,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/practice")
+@RequestMapping("/api/practice") // http://localhost:8080/api/practice
 @RequiredArgsConstructor
 public class PracticeController {
     private final ManageSession sessionService;
     private final GetNextQuestion nextService;
     private final SubmitAnswer answerService;
 
+    // POST http://localhost:8080/api/practice/session/start
     @PostMapping("/session/start")
     public ResponseEntity<?> startSession(
             @RequestHeader(name = "x-cognito-sub") UUID userId,

@@ -18,3 +18,11 @@ public class StartSessionRequest {
     @NotBlank(message = "Activity ID is required.")
     private String activityId;
 }
+
+/**
+ * {
+ *     "unitId": "u_1"
+ *     "episodeId": "e_1"
+ *     "activityId": "a_1"
+ * }
+ */

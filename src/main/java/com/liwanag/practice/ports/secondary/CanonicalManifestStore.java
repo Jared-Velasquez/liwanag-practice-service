@@ -7,6 +7,10 @@ import com.liwanag.practice.domain.model.questions.Question;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The canonical manifest store interface loads questions from an ActivityManifestHandle
+ * (which usually points to a JSON file in S3)
+ */
 public interface CanonicalManifestStore {
     Optional<List<Question>> load(ActivityManifestHandle handle);
 }

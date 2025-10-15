@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+/**
+ * This interface loads activities, episodes, and units
+ * from the canonical store.
+ */
 public interface CanonicalStore {
     /**
      * Load an activity by its fully qualified ID

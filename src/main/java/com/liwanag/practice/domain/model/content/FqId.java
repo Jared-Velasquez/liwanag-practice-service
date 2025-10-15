@@ -8,6 +8,10 @@ import java.util.regex.Pattern;
 
 /**
  * Represents a fully-qualified ID for units, episodes, and activities.
+ * Example:
+ * ACTIVITY#u_1#e_1#a_1
+ * EPISODE#u_1#e_1
+ * UNIT#u_1
  */
 @AllArgsConstructor
 @Getter
