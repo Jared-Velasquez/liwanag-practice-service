@@ -1,14 +1,17 @@
-# ---------- Build stage ----------
+# syntax=docker/dockerfile:1.7
 FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 
+COPY .mvn/ .mvn/
+COPY mvnw .
+RUN chmod +x mvnw
+
 COPY pom.xml ./
-RUN --mount=type=cache,target=/root/.m2 mvn -B -q -DskipTests dependency:go-offline
+RUN --mount=type=cache,target=/root/.m2 ./mvnw -B -q -DskipTests dependency:go-offline
 
 COPY src ./src
-RUN --mount=type=cache,target=/root/.m2 mvn -B -q -DskipTests package
+RUN --mount=type=cache,target=/root/.m2 ./mvnw -B -q -DskipTests package
 
-RUN bash -lc 'ls -1 target/*-SNAPSHOT.jar || ls -1 target/*.jar' > /tmp/jarname.txt
 
 # ---------- Runtime stage ----------
 FROM eclipse-temurin:21-jre
